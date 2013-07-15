@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+ TEST
+
+Searched For: {{ query }}
+
+<form method="get" action=".">
+<table>
+ {{ form }}
+</table>
+<input type="submit">
+</form> 
+
+{% endblock %}

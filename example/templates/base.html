@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>{% block title %}{% endblock %} | {{ site.name }}</title>
+    <!--[if IE]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    {% block extra_head %}{% endblock %}
+  </head>
+
+  <body>
+    <header>
+      <nav id="site-nav"><ul>
+      </ul></nav>
+
+      {% block header %}{% endblock %}
+
+    </header>
+
+    <div id="body">
+      <div id="main">
+        <div id="message-holder">
+      	{% if messages %}
+	    	<ul class="messages">
+  		    {% for message in messages %}
+	  	    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+  		    {% endfor %}
+        </ul>        
+        {% endif %}
+        {% block extra_messages %}{% endblock %}
+        </div>
+    	
+        {% block main %}{% block content %}{% endblock %}{% endblock %}
+      </div><!-- end of #main -->
+    </div>
+    <footer>
+      <p>
+        Copyright &copy; {% now "Y" %}, {{ site.name }} &bull; All Rights Reserved<br />
+        Web Design and Development by <a href="http://www.imagescape.com">Imaginary Landscape, LLC</a>
+      </p>
+    </footer>
+    {% block extra_foot %}{% endblock %}  
+  </body>
+</html>
