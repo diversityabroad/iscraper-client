@@ -1,0 +1,4 @@
+# Install using setup.py
+
+Django<=1.1.4
+google-api-python-client
