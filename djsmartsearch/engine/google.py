@@ -1,4 +1,7 @@
+import logging
+import json
 import apiclient
+from django.conf import settings
 from apiclient.discovery import build
 from djsmartsearch.engine import SearchEngineBase
 from djsmartsearch.engine import SMARTSEARCH_AVAILABLE_ENGINES
@@ -15,6 +18,7 @@ SMARTSEARCH_AVAILABLE_ENGINES = [
      },
 ]
 """
+logger = logging.getLogger('%s.google' % getattr(settings, 'SMARTSEARCH_LOGGER', 'smartsearch'))
 
 
 class SearchEngine(SearchEngineBase):
@@ -25,13 +29,14 @@ class SearchEngine(SearchEngineBase):
         self.engine_info = filter(lambda x: 'NAME' in x.keys() and x['NAME'] is name, SMARTSEARCH_AVAILABLE_ENGINES)[0]
         self.connection =  build('customsearch', 'v1', developerKey=self.engine_info['GOOGLE_SITE_SEARCH_API_KEY'])
         
-    def fetch(self, query, num=None, start=0):
+    def fetch(self, query, num=None, start=1):
         api_seid = self.engine_info['GOOGLE_SITE_SEARCH_SEID']
         try:
-            self.input_data = self.connection.cse().list( q=query, cx=api_seid, num=self._get_num_results(num), start=start).execute()
-        except apiclient.errors.HttpError:
-            self.input_data = {'items':[]}
-        return self.input_data 
+            results = self.connection.cse().list( q=query, cx=api_seid, num=self._get_num_results(num), start=start).execute()
+        except apiclient.errors.HttpError as e:
+            logger.exception(e)
+            raise 
+        return results 
     
     def get_iteration_root(self, results):
         return_value = []
