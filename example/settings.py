@@ -3,6 +3,8 @@ import sys, os
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+PROJECT_DIR = os.path.dirname(__file__)
+
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
@@ -69,10 +71,20 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'example.urls'
 
+
+TEMPLATE_CONTEXT_PROCESSORS = ('django.core.context_processors.auth', 
+'django.core.context_processors.debug', 
+'django.core.context_processors.i18n', 
+'django.core.context_processors.media',
+'django.core.context_processors.request',
+)
+
+
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(PROJECT_DIR, 'templates'),
 )
 
 INSTALLED_APPS = (
@@ -86,10 +98,17 @@ INSTALLED_APPS = (
 )
 
 
+CACHE_BACKEND = 'locmem://'
+
 SMARTSEARCH_AVAILABLE_ENGINES = [
     {'NAME':'google',
      'CLASS':'djsmartsearch.engine.google.SearchEngine',
      'GOOGLE_SITE_SEARCH_API_KEY':'',
-     'GOOGLE_SITE_SEARCH_SEID':'010508078101574802207:9w28wngjjbs',
+     'GOOGLE_SITE_SEARCH_SEID':'',
      },
 ]
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
