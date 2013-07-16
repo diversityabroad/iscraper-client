@@ -25,30 +25,49 @@ class SearchEngineBase(object):
     max_results = 10 # default max results
     
     def get_iteration_root(self):
+        """
+        Returns the iterable at the root of the search results. 
+        """
         raise NotImplementedError("implement this get_iteration_root method in a subclass")
     
     def parse_row(self, row):
+        """
+        Provide any logic to specifically parse a given result row. 
+        """
         raise NotImplementedError("implement this parse_row method in a subclass")
+
+    def set_meta_from_results(self, resutls):
+        """
+        Should make a call to set_meta(), passing any meta keywords
+        and return the results.  This returns no meta data by default 
+        """
+        return self.set_meta()
+    
+    def fetch(self,  *args, **kwargs):
+        """
+        Issues the command to actually make the network request to fetch the
+        response. 
+        """
+        raise NotImplementedError("implement this fetch method in a subclass")
 
     def _fetch_wrap(self, *args, **kwargs):
         try:
-            results =  self.fetch(*args, **kwargs)
+            response =  self.fetch(*args, **kwargs)
         except Exception as e:
             logger.exception(e)
-            results = []
-        return results 
+            response = []
+        return response 
 
-    def fetch(self,  *args, **kwargs):
-        raise NotImplementedError("implement this fetch method in a subclass")
-    
     def search(self, *args, **kwargs):
-        results = self._fetch_wrap(*args, **kwargs)
-        result = self._iterate(results)
-        yield result
+        response = self._fetch_wrap(*args, **kwargs)
+        meta = self.set_meta_from_results(response)
+        result_iter = self._iterate(response)
+        return result_iter, meta
         
-    def _iterate(self, results):
-        for item in self.get_iteration_root(results):
-            yield self.parse_row(item)
+    def _iterate(self, response):
+        if response:
+            for item in self.get_iteration_root(response):
+                yield self.parse_row(item)
             
     def _get_num_results(self, num):
         if not num:
