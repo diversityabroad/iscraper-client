@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load smartsearch_util %}
 
 {% block content %}
 
@@ -11,20 +11,22 @@ Searched For: {{ query }}
 </table>
 <input type="submit">
 </form> 
-{% if meta.previous_page_start %}
-<a href="?{{ request.GET.urlencode }}&start={{ meta.previous_page_start }}">Previous</a> - 
+
+{% if meta.global.previous_page_start %}
+<a href="{% start_url request.get_full_path meta.global.previous_page_start  %}">Previous</a> 
 {% endif %}
-{% if meta.next_page_start %}
-<a href="?{{ request.GET.urlencode }}&start={{ meta.next_page_start }}">Next</a> 
+
+{% if meta.global.next_page_start %}
+<a href="{% start_url request.get_full_path meta.global.next_page_start  %}">Next</a> 
 {% endif %}
 
 <hr>
-{% for result in results %}
+{% for result in results.local %}
    {% include  result_include %}
 {% endfor %}
 
 <hr>
-{% for result in results_global %}
+{% for result in results.global %}
    {% include  result_include %}
 {% endfor %}
 
