@@ -70,7 +70,7 @@ class SearchEngine(SearchEngineBase):
         
     def get_iteration_root(self, results):
         return_value = []
-        if isinstance(results, dict):
+        if isinstance(results, dict) and results.has_key('items'):
             return_value = results['items']
         return return_value
     
