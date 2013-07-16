@@ -9,8 +9,23 @@ Searched For: {{ query }}
 <table>
  {{ form.query }}{{ form.query.errors }}{{ form.start.errors }}
 </table>
-<input type="submit">
+<input type="submit" value="Search">
 </form> 
+
+{% if meta.local.previous_page_start %}
+<a href="{% start_url request.get_full_path meta.local.previous_page_start  %}">Previous</a> 
+{% endif %}
+
+{% if meta.local.next_page_start %}
+<a href="{% start_url request.get_full_path meta.local.next_page_start  %}">Next</a> 
+{% endif %}
+
+<h3>Local Search Results</h3>
+<div>Total results: {{ meta.local.total_results }}</div> 
+{% for result in results.local %}
+   {% include  result_include %}
+{% endfor %}
+
 
 {% if meta.global.previous_page_start %}
 <a href="{% start_url request.get_full_path meta.global.previous_page_start  %}">Previous</a> 
@@ -20,14 +35,13 @@ Searched For: {{ query }}
 <a href="{% start_url request.get_full_path meta.global.next_page_start  %}">Next</a> 
 {% endif %}
 
-<hr>
-{% for result in results.local %}
-   {% include  result_include %}
-{% endfor %}
-
-<hr>
+<h3>Global Search Results</h3>
+<div>Total results: {{ meta.global.total_results }}</div> 
 {% for result in results.global %}
    {% include  result_include %}
 {% endfor %}
+
+
+
 
 {% endblock %}
