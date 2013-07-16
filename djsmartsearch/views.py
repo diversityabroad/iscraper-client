@@ -3,6 +3,7 @@ from djsmartsearch.cbv_fallback import FormView
 from djsmartsearch import forms as smart_forms
 from djsmartsearch.engine import  load_engines
 from django.core.cache import cache
+from django.conf import settings
 
 class SearchView(FormView):
 
@@ -10,8 +11,9 @@ class SearchView(FormView):
     results = {}
     meta = {}
 
-
     def __init__(self, *args, **kwargs):
+        self.results = {}
+        self.meta = {}
         e = load_engines()
         self.engine = e[self.engine_name]
         super(SearchView, self).__init__(*args, **kwargs)
@@ -47,7 +49,9 @@ class DualGoogleSearchView(SearchView):
         if self.query:
             
             results_key = "results:%(query)s:%(start)s" % kwargs
-            self.results['local'], self.meta['local'] = self.get_results(results_key, kwargs)
+            link_site = getattr(settings, 'SMARTSEARCH_LOCAL_SITE', None)
+            local_kwargs = dict(query="site:%s %s" % (link_site, kwargs['query']), **{i:kwargs[i] for i in kwargs if i!='query'})
+            self.results['local'], self.meta['local'] = self.get_results(results_key, local_kwargs)
 
             results_global_key = "global_%s" % (results_key)
             self.results['global'], self.meta['global'] = self.get_results(results_global_key, kwargs)

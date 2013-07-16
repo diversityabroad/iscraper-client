@@ -107,6 +107,7 @@ SMARTSEARCH_AVAILABLE_ENGINES = [
      'GOOGLE_SITE_SEARCH_SEID':'',
      },
 ]
+SMARTSEARCH_LOCAL_SITE="www.osfsaintfrancis.org"
 
 try:
     from local_settings import *
