@@ -12,13 +12,19 @@ class SearchView(FormView):
     meta = {}
 
     def __init__(self, *args, **kwargs):
+        """
+        Load the appropriate search engine and set defaults. 
+        """
         self.results = {}
         self.meta = {}
-        e = load_engines()
-        self.engine = e[self.engine_name]
+        self.engine = load_engines()[self.engine_name]
         super(SearchView, self).__init__(*args, **kwargs)
 
     def get_cached(self, key):
+        """
+        Lookup a given cache key and split out
+        the search results and meta information from the key
+        """
         meta = {}
         results = []
         lookup = cache.get(key)
@@ -27,6 +33,10 @@ class SearchView(FormView):
         return results, meta
     
     def get_results(self, key, kwargs):
+        """
+        Perform the search and return the results. 
+        If a cached version of the results exist, return that.
+        """
         results, meta = self.get_cached(key)
         if not results:
             result_iter, meta = self.engine.search(**kwargs)

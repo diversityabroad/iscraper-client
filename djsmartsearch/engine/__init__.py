@@ -46,7 +46,9 @@ class SearchEngineBase(object):
     def fetch(self,  *args, **kwargs):
         """
         Issues the command to actually make the network request to fetch the
-        response. 
+        response. This returns a raw search result response from the search engine. 
+        
+        One can use this method to test the connection. 
         """
         raise NotImplementedError("implement this fetch method in a subclass")
 

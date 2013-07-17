@@ -38,6 +38,8 @@ class SearchEngine(SearchEngineBase):
           - query = the search term to look for
           - num = the number of results to search for less than or equal to 10
           - start = an integer representing the search result to start on
+        
+        One can use this method to test the connection. 
         """
         api_seid = self.engine_info['GOOGLE_SITE_SEARCH_SEID']
         try:
