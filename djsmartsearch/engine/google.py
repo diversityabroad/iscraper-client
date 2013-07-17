@@ -49,6 +49,7 @@ class SearchEngine(SearchEngineBase):
             response = self.connection.cse().list( q=kwargs.get('query', ''), cx=api_seid, 
                             num=self._get_num_results(kwargs.get('num', None)),
                             start=kwargs.get('start', 1)).execute()
+            logger.debug("Fetched search results for search term '%s'." % (kwargs.get('query', '')))
         except apiclient.errors.HttpError, e:
             logger.exception(e)
             raise 
