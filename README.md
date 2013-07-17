@@ -63,3 +63,12 @@ Set the cache backend to something:
         }
     }
     
+4) Add the following to urls.py
+
+    urlpatterns = patterns('',
+        url(r'^search/$', DualGoogleSearchView.as_view()),
+        ....
+    )
+
+
+    
