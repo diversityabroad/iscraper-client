@@ -45,10 +45,16 @@ class SearchEngine(SearchEngineBase):
         One can use this method to test the connection. 
         """
         api_seid = self.engine_info['GOOGLE_SITE_SEARCH_SEID']
+        start = kwargs.get('start', 1)
+        num = kwargs.get('num', 10)
+        if not start:
+            start = 1
+        if not num:
+            num = 10
         try:
             response = self.connection.cse().list( q=kwargs.get('query', ''), cx=api_seid, 
-                            num=self._get_num_results(kwargs.get('num', 10)),
-                            start=kwargs.get('start', 1)).execute()
+                            num=self._get_num_results(num),
+                            start=start).execute()
             logger.debug("Fetched search results for search term '%s'." % (kwargs.get('query', '')))
         except apiclient.errors.HttpError, e:
             logger.exception(e)
