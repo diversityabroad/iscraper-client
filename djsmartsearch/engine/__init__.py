@@ -55,7 +55,7 @@ class SearchEngineBase(object):
     def _fetch_wrap(self, *args, **kwargs):
         try:
             response =  self.fetch(*args, **kwargs)
-        except Exception as e:
+        except Exception, e:
             logger.exception(e)
             response = []
         return response 

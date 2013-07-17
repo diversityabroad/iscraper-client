@@ -1,5 +1,8 @@
 import logging
-import json
+try:
+    import json
+except ImportError:
+    import simplejson as json 
 import apiclient
 from django.conf import settings
 from apiclient.discovery import build
@@ -46,7 +49,7 @@ class SearchEngine(SearchEngineBase):
             response = self.connection.cse().list( q=kwargs.get('query', ''), cx=api_seid, 
                             num=self._get_num_results(kwargs.get('num', None)),
                             start=kwargs.get('start', 1)).execute()
-        except apiclient.errors.HttpError as e:
+        except apiclient.errors.HttpError, e:
             logger.exception(e)
             raise 
         return response 
