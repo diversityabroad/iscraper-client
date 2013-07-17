@@ -61,6 +61,7 @@ class SearchEngineBase(object):
         return response 
 
     def search(self, *args, **kwargs):
+        logger.debug("Searching with the following parameters %s" % (kwargs))
         response = self._fetch_wrap(*args, **kwargs)
         meta = self.set_meta_from_results(response)
         result_iter = self._iterate(response)
