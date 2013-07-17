@@ -54,17 +54,19 @@ class DualGoogleSearchView(SearchView):
 
     def form_valid(self, form):
         self.query = form.cleaned_data['query']
-        self.start = form.cleaned_data['start']
-        kwargs = {'query':self.query, 'start':self.start}
+        self.page = form.cleaned_data['page']
+        self.page_local = form.cleaned_data['page_local']
+        
         if self.query:
             
-            results_key = "results:%(query)s:%(start)s" % kwargs
             link_site = getattr(settings, 'SMARTSEARCH_LOCAL_SITE', None)
-            local_kwargs = dict(query="site:%s %s" % (link_site, kwargs['query']), **{i:kwargs[i] for i in kwargs if i!='query'})
+            local_kwargs = {'query':"site:%s %s" % (link_site, self.query), 'start':self.page_local}
+            results_key = "results" + ":".join(map(lambda x: "%s" % x, local_kwargs.values()))
             self.results['local'], self.meta['local'] = self.get_results(results_key, local_kwargs)
 
-            results_global_key = "global_%s" % (results_key)
-            self.results['global'], self.meta['global'] = self.get_results(results_global_key, kwargs)
+            global_kwargs = {'query':self.query, 'start':self.page}
+            results_global_key = "results_global" + ":".join(map(lambda x: "%s" % x, global_kwargs.values()))
+            self.results['global'], self.meta['global'] = self.get_results(results_global_key, global_kwargs)
 
         return super(DualGoogleSearchView, self).form_valid(form)
 

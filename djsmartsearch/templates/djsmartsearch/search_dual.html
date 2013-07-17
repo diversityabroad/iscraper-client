@@ -12,30 +12,32 @@ Searched For: {{ query }}
 <input type="submit" value="Search">
 </form> 
 
+{% block local_pagination %}
 {% if meta.local.previous_page_start %}
-<a href="{% start_url request.get_full_path meta.local.previous_page_start  %}">Previous</a> 
+<a href="{% start_url request.get_full_path 'page_local' meta.local.previous_page_start  %}">Previous</a> 
 {% endif %}
-
 {% if meta.local.next_page_start %}
-<a href="{% start_url request.get_full_path meta.local.next_page_start  %}">Next</a> 
+<a href="{% start_url request.get_full_path 'page_local' meta.local.next_page_start  %}">Next</a> 
 {% endif %}
+{% endblock local_pagination %}
 
-<h3>Local Search Results</h3>
+{% block local_search_title %}<h3>Local Search Results</h3>{% endblock local_search_title %}
 <div>Total results: {{ meta.local.total_results }}</div> 
 {% for result in results.local %}
    {% include  result_include %}
 {% endfor %}
 
 
+{% block global_pagination %}
 {% if meta.global.previous_page_start %}
-<a href="{% start_url request.get_full_path meta.global.previous_page_start  %}">Previous</a> 
+<a href="{% start_url request.get_full_path 'page' meta.global.previous_page_start  %}">Previous</a> 
 {% endif %}
-
 {% if meta.global.next_page_start %}
-<a href="{% start_url request.get_full_path meta.global.next_page_start  %}">Next</a> 
+<a href="{% start_url request.get_full_path 'page' meta.global.next_page_start  %}">Next</a> 
 {% endif %}
+{% endblock global_pagination %}
 
-<h3>Global Search Results</h3>
+{% block global_search_title %}<h3>Global Search Results</h3>{% endblock global_search_title %}
 <div>Total results: {{ meta.global.total_results }}</div> 
 {% for result in results.global %}
    {% include  result_include %}
