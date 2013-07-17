@@ -13,6 +13,7 @@ Searched For: {{ query }}
 </form> 
 
 {% block local_pagination %}
+Showing results: {{ meta.local.start_index }} - {{ meta.local.end_index }}
 {% if meta.local.previous_page_start %}
 <a href="{% start_url request.get_full_path 'page_local' meta.local.previous_page_start  %}">Previous</a> 
 {% endif %}
@@ -29,6 +30,7 @@ Searched For: {{ query }}
 
 
 {% block global_pagination %}
+Showing results: {{ meta.global.start_index }} - {{ meta.global.end_index }} 
 {% if meta.global.previous_page_start %}
 <a href="{% start_url request.get_full_path 'page' meta.global.previous_page_start  %}">Previous</a> 
 {% endif %}

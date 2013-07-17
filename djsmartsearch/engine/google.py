@@ -52,7 +52,7 @@ class SearchEngine(SearchEngineBase):
         return response 
 
     def set_meta_from_results(self, resutls):
-        meta = {}
+        meta = {'start_index':0, 'end_index':0, 'count':0, 'total_results':0}
         try:
             meta.update({'total_results':resutls['queries']['request'][0]['totalResults']})
         except:
@@ -67,7 +67,16 @@ class SearchEngine(SearchEngineBase):
             meta.update({'previous_page_start':resutls['queries']['previousPage'][0]['startIndex']})
         except:
             pass
-                
+        
+        try:
+            start_index = resutls['queries']['request'][0]['startIndex']
+            count = resutls['queries']['request'][0]['count']
+            meta.update({'start_index':start_index})
+            meta.update({'end_index':start_index - 1 + count})
+            meta.update({'count':count})
+        except:
+            pass
+
         return meta
         
     def get_iteration_root(self, results):
