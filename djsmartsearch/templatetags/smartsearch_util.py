@@ -2,6 +2,10 @@ import urllib
 import urlparse
 from django import template
 from django.template.defaulttags import Node
+try: # Python 2.4 shim
+  from urlparse import parse_qsl
+except ImportError:
+  from cgi import parse_qsl
 
 
 register = template.Library()
@@ -23,7 +27,7 @@ class MergeKwargsNode(Node):
         
         params = {page_arg_name:start}
         url_parts = list(urlparse.urlparse(current_url))
-        query = dict(urlparse.parse_qsl(url_parts[4]))
+        query = dict(parse_qsl(url_parts[4]))
         query.update(params)
         
         url_parts[4] = urllib.urlencode(query)
