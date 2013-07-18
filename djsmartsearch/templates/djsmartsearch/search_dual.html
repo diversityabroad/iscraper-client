@@ -12,7 +12,7 @@ function loadResults(target, wrapper) {
 }
 $(document).ready(function(){
     $('.pagination a').live('click', function(){
-        loadResults($(this).attr('href'), $(this).parents('.results-wrapper'));
+        loadResults($(this).attr('href'), $('#search-results-wrapper'));
         window.history.pushState(null,null,$(this).attr('href'));
         return false;
     });
