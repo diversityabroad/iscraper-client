@@ -10,7 +10,10 @@ $(document).ready(function(){
         var target = $(this).attr('href'),
             wrapper = $(this).parents('.results-wrapper'),
             results = wrapper.find('>div');
-        wrapper.load(target+' #'+results.attr('id'));
+        results.css('opacity', .3);
+        wrapper.load(target+' #'+results.attr('id'), function() {
+            
+        });
         return false;
     });
 });
