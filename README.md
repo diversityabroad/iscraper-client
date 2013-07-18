@@ -65,6 +65,8 @@ Set the cache backend to something:
     
 4) Add the following to urls.py
 
+    from djsmartsearch.views import DualGoogleSearchView
+
     urlpatterns = patterns('',
         url(r'^search/$', DualGoogleSearchView.as_view()),
         ....
