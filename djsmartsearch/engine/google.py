@@ -26,7 +26,7 @@ logger = logging.getLogger('%s.google' % getattr(settings, 'SMARTSEARCH_LOGGER',
 
 class SearchEngine(SearchEngineBase):
 
-    max_results = 10
+    max_results_per_page = 10
 
     def __init__(self, name='google'):
         """

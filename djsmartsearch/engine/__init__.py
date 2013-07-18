@@ -22,7 +22,7 @@ logger = logging.getLogger(getattr(settings, 'SMARTSEARCH_LOGGER', 'smartsearch'
 
 class SearchEngineBase(object):
     
-    max_results = 10 # default max results
+    max_results_per_page = 10 # default max results per page
     
     def get_iteration_root(self):
         """
@@ -74,7 +74,7 @@ class SearchEngineBase(object):
             
     def _get_num_results(self, num):
         if not num:
-            num = self.max_results
-        if num > self.max_results:
-            num = self.max_results
+            num = self.max_results_per_page
+        if num > self.max_results_per_page:
+            num = self.max_results_per_page
         return num
