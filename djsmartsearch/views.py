@@ -60,11 +60,11 @@ class DualGoogleSearchView(SearchView):
         if self.query:
             
             link_site = getattr(settings, 'SMARTSEARCH_LOCAL_SITE', None)
-            local_kwargs = {'query':"site:%s %s" % (link_site, self.query), 'start':self.page_local}
+            local_kwargs = {'query':"site:%s %s" % (link_site, self.query), 'page':self.page_local}
             results_key = "results" + ":".join(map(lambda x: "%s" % x, local_kwargs.values()))
             self.results['local'], self.meta['local'] = self.get_results(results_key, local_kwargs)
 
-            global_kwargs = {'query':self.query, 'start':self.page}
+            global_kwargs = {'query':self.query, 'page':self.page}
             results_global_key = "results_global" + ":".join(map(lambda x: "%s" % x, global_kwargs.values()))
             self.results['global'], self.meta['global'] = self.get_results(results_global_key, global_kwargs)
 

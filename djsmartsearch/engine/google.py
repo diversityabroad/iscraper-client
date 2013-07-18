@@ -1,4 +1,5 @@
 import logging
+import math
 try:
     import json
 except ImportError:
@@ -27,6 +28,7 @@ logger = logging.getLogger('%s.google' % getattr(settings, 'SMARTSEARCH_LOGGER',
 class SearchEngine(SearchEngineBase):
 
     max_results_per_page = 10
+    max_pages = 10
 
     def __init__(self, name='google'):
         """
@@ -45,12 +47,15 @@ class SearchEngine(SearchEngineBase):
         One can use this method to test the connection. 
         """
         api_seid = self.engine_info['GOOGLE_SITE_SEARCH_SEID']
-        start = kwargs.get('start', 1)
-        num = kwargs.get('num', 10)
-        if not start:
-            start = 1
+        page = kwargs.get('page', 1)
+        if not page:
+            page = 1
+        elif page > self.max_pages:
+            page = self.max_pages
+        start = ((page - 1) * self.max_results_per_page) + 1
+        num = kwargs.get('num', self.max_results_per_page)
         if not num:
-            num = 10
+            num = self.max_results_per_page
         try:
             response = self.connection.cse().list( q=kwargs.get('query', ''), cx=api_seid, 
                             num=self._get_num_results(num),
@@ -61,38 +66,51 @@ class SearchEngine(SearchEngineBase):
             raise 
         return response 
 
-    def set_meta_from_results(self, resutls):
-        meta = {'start_index':0, 'end_index':0, 'count':0, 'total_results':0}
-        try:
-            meta.update({'total_results':resutls['queries']['request'][0]['totalResults']})
-        except:
-            pass
-        
-        try:
-            meta.update({'next_page_start':resutls['queries']['nextPage'][0]['startIndex']})
-        except:
-            pass
-        
-        try:
-            meta.update({'previous_page_start':resutls['queries']['previousPage'][0]['startIndex']})
-        except:
-            pass
-        
-        try:
-            start_index = resutls['queries']['request'][0]['startIndex']
-            count = resutls['queries']['request'][0]['count']
-            meta.update({'start_index':start_index})
-            meta.update({'end_index':start_index - 1 + count})
-            meta.update({'count':count})
-        except:
-            pass
+    def set_meta_from_response(self, response):
+        meta = super(SearchEngine, self).set_meta_from_response(response)
+        if response: 
+            try:
+                meta.update({'total_results':response['queries']['request'][0]['totalResults']})
+            except:
+                logger.debug("Unable to parse queries.request.total_results from response.")
+                pass
+            
+            try:
+                meta.update({'next_page_start':response['queries']['nextPage'][0]['startIndex']})
+            except:
+                logger.debug("Unable to parse queries.nextPage.startIndex from response.")
+                pass
+            
+            try:
+                meta.update({'previous_page_start':response['queries']['previousPage'][0]['startIndex']})
+            except:
+                logger.debug("Unable to parse queries.previousPage.startIndex from response.")
+                pass
+            
+            try:
+                start_index = response['queries']['request'][0]['startIndex']
+                count = response['queries']['request'][0]['count']
+                meta.update({'start_index':start_index})
+                meta.update({'end_index':start_index - 1 + count})
+                
+                page = int(math.ceil(start_index / float(self.max_results_per_page)))
+                meta.update({'page':page})
+                if page > 1:
+                   meta.update({'previous_page':page - 1})
+                if page < self.max_pages:
+                    meta.update({'next_page':page + 1}) 
+                
+                meta.update({'count':count})
+            except Exception, e:
+                logger.exception(e)
+                pass
 
         return meta
         
-    def get_iteration_root(self, results):
+    def get_iteration_root(self, response):
         return_value = []
-        if isinstance(results, dict) and results.has_key('items'):
-            return_value = results['items']
+        if isinstance(response, dict) and response.has_key('items'):
+            return_value = response['items']
         return return_value
     
     def parse_row(self, row):

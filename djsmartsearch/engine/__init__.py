@@ -36,12 +36,15 @@ class SearchEngineBase(object):
         """
         raise NotImplementedError("implement this parse_row method in a subclass")
 
-    def set_meta_from_results(self, resutls):
+    def set_meta_from_response(self, response):
         """
-        Should make a call to set_meta(), passing any meta keywords
-        and return the results.  This returns no meta data by default 
+        Should override to return a dictionary of meta keywords parsed
+        from the search result.  For example, pagination logic and
+        results counts could be added here. 
         """
-        return self.set_meta()
+        meta = {'start_index':0, 'end_index':0, 'count':0, 'total_results':0, 'page':0,
+                'page_previous':None, 'page_next':None,  }
+        return meta
     
     def fetch(self,  *args, **kwargs):
         """
@@ -57,13 +60,14 @@ class SearchEngineBase(object):
             response =  self.fetch(*args, **kwargs)
         except Exception, e:
             logger.exception(e)
-            response = []
+            response = None
         return response 
 
     def search(self, *args, **kwargs):
+        result_iter = []
         logger.debug("Searching with the following parameters %s" % (kwargs))
         response = self._fetch_wrap(*args, **kwargs)
-        meta = self.set_meta_from_results(response)
+        meta = self.set_meta_from_response(response)
         result_iter = self._iterate(response)
         return result_iter, meta
         
