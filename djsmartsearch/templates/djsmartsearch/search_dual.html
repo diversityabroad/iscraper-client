@@ -36,11 +36,11 @@ $(document).ready(function(){
   <p class="pagination">
     Showing results: <strong>{{ meta.local.start_index }} - {{ meta.local.end_index }}</strong> of {{ meta.local.total_results }}<br />
     {% if meta.local.previous_page_start %}
-      <a href="{% start_url request.get_full_path 'page_local' meta.local.previous_page_start  %}">Previous</a> 
+      <a href="{% start_url request.get_full_path 'page_local,page' meta.local.previous_page_start  %}">Previous</a> 
       {% if meta.local.next_page_start %} | {% endif %}
     {% endif %}
     {% if meta.local.next_page_start %}
-      <a href="{% start_url request.get_full_path 'page_local' meta.local.next_page_start  %}">Next</a> 
+      <a href="{% start_url request.get_full_path 'page_local,page' meta.local.next_page_start  %}">Next</a> 
     {% endif %}
   </p>
   {% for result in results.local %}
@@ -60,11 +60,11 @@ $(document).ready(function(){
   <p class="pagination">
     Showing results: <strong>{{ meta.global.start_index }} - {{ meta.global.end_index }}</strong> of {{ meta.global.total_results }}<br />
     {% if meta.global.previous_page_start %}
-      <a href="{% start_url request.get_full_path 'page' meta.global.previous_page_start  %}">Previous</a>
+      <a href="{% start_url request.get_full_path 'page,page_local' meta.global.previous_page_start  %}">Previous</a>
       {% if meta.global.next_page_start %} | {% endif %} 
     {% endif %}
     {% if meta.global.next_page_start %}
-      <a href="{% start_url request.get_full_path 'page' meta.global.next_page_start  %}">Next</a> 
+      <a href="{% start_url request.get_full_path 'page,page_local' meta.global.next_page_start  %}">Next</a> 
     {% endif %}
   </p>
   {% for result in results.global %}

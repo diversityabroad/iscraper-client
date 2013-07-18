@@ -12,22 +12,29 @@ register = template.Library()
 
 class MergeKwargsNode(Node):
 
-    def __init__(self, current_url, page_arg_name, start):
+    def __init__(self, current_url, page_arg_names, start):
         self.current_url = template.Variable(current_url)
-        self.page_arg_name = template.Variable(page_arg_name)
+        self.page_arg_names = template.Variable(page_arg_names)
         self.start = template.Variable(start)
     
     def render(self, context):
         try:
             start = self.start.resolve(context)
             current_url = self.current_url.resolve(context)
-            page_arg_name = self.page_arg_name.resolve(context)
+            page_arg_names = self.page_arg_names.resolve(context)
         except Exception:
             raise template.TemplateSyntaxError("Invalid variables passed to start_url tag")
         
-        params = {page_arg_name:start}
+        names = page_arg_names.split(",")
+
+            
+        params = {names[0]:start}
         url_parts = list(urlparse.urlparse(current_url))
         query = dict(parse_qsl(url_parts[4]))
+        for name in names[1:]:
+            if not query.has_key(name):
+                query.update({name:1})
+        
         query.update(params)
         
         url_parts[4] = urllib.urlencode(query)
@@ -39,8 +46,8 @@ class MergeKwargsNode(Node):
 def start_url(parser, token, node_cls=MergeKwargsNode):
 
     try:
-        tag_name, current_url, page_arg_name, start = token.split_contents()
+        tag_name, current_url, page_arg_names, start = token.split_contents()
     except ValueError:
         raise template.TemplateSyntaxError("%r tag requires exactly 3 arguments" % token.contents.split()[0])
-    return node_cls(current_url, page_arg_name, start)
+    return node_cls(current_url, page_arg_names, start)
 
