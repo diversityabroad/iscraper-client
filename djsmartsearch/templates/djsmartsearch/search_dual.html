@@ -1,51 +1,79 @@
 {% extends "base.html" %}
 {% load smartsearch_util %}
 
-{% block content %}
+{% block title %}Search: {{ query }}{% endblock %}
 
-Searched For: {{ query }}
+{% block head %}{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.pagination a').live('click', function(){
+        var target = $(this).attr('href'),
+            wrapper = $(this).parents('.results-wrapper'),
+            results = wrapper.find('>div');
+        results.css('opacity', .3);
+        wrapper.load(target+' #'+results.attr('id'), function() {
+            
+        });
+        return false;
+    });
+});
+</script>
+{% endblock %}
+
+
+{% block content %}
+<h1>{{ SITE_NAME }} | Search: {{ query }}</h1>
 
 <form method="get" action=".">
-<table>
- {{ form.query }}{{ form.query.errors }}{{ form.start.errors }}
-</table>
-<input type="submit" value="Search">
+  {{ form.query.errors }}{{ form.start.errors }}
+ <p>{{ form.query }} <input type="submit" value="Search"></p>
 </form> 
 
-{% block local_pagination %}
-Showing results: {{ meta.local.start_index }} - {{ meta.local.end_index }}
-{% if meta.local.previous_page_start %}
-<a href="{% start_url request.get_full_path 'page_local' meta.local.previous_page_start  %}">Previous</a> 
+<h3>Search Results: {{ SITE_NAME }}</h3>
+<div class="results-wrapper">
+<div id="local-results">
+{% if meta.local.total_results %}
+  <p class="pagination">
+    Showing results: <strong>{{ meta.local.start_index }} - {{ meta.local.end_index }}</strong> of {{ meta.local.total_results }}<br />
+    {% if meta.local.previous_page_start %}
+      <a href="{% start_url request.get_full_path 'page_local' meta.local.previous_page_start  %}">Previous</a> 
+      {% if meta.local.next_page_start %} | {% endif %}
+    {% endif %}
+    {% if meta.local.next_page_start %}
+      <a href="{% start_url request.get_full_path 'page_local' meta.local.next_page_start  %}">Next</a> 
+    {% endif %}
+  </p>
+  {% for result in results.local %}
+    {% include result_include %}
+  {% endfor %}
+{% else %}
+  <p>No results found</p>
 {% endif %}
-{% if meta.local.next_page_start %}
-<a href="{% start_url request.get_full_path 'page_local' meta.local.next_page_start  %}">Next</a> 
+</div>
+</div>
+
+
+<h3>Search Results: All OSF Healthcare Sites</h3>
+<div class="results-wrapper">
+<div id="global-results">
+{% if meta.global.total_results %}
+  <p class="pagination">
+    Showing results: <strong>{{ meta.global.start_index }} - {{ meta.global.end_index }}</strong> of {{ meta.global.total_results }}<br />
+    {% if meta.global.previous_page_start %}
+      <a href="{% start_url request.get_full_path 'page' meta.global.previous_page_start  %}">Previous</a>
+      {% if meta.global.next_page_start %} | {% endif %} 
+    {% endif %}
+    {% if meta.global.next_page_start %}
+      <a href="{% start_url request.get_full_path 'page' meta.global.next_page_start  %}">Next</a> 
+    {% endif %}
+  </p>
+  {% for result in results.global %}
+    {% include result_include %}
+  {% endfor %}
+{% else %}
+  <p>No results found</p>
 {% endif %}
-{% endblock local_pagination %}
-
-{% block local_search_title %}<h3>Local Search Results</h3>{% endblock local_search_title %}
-<div>Total results: {{ meta.local.total_results }}</div> 
-{% for result in results.local %}
-   {% include  result_include %}
-{% endfor %}
-
-
-{% block global_pagination %}
-Showing results: {{ meta.global.start_index }} - {{ meta.global.end_index }} 
-{% if meta.global.previous_page_start %}
-<a href="{% start_url request.get_full_path 'page' meta.global.previous_page_start  %}">Previous</a> 
-{% endif %}
-{% if meta.global.next_page_start %}
-<a href="{% start_url request.get_full_path 'page' meta.global.next_page_start  %}">Next</a> 
-{% endif %}
-{% endblock global_pagination %}
-
-{% block global_search_title %}<h3>Global Search Results</h3>{% endblock global_search_title %}
-<div>Total results: {{ meta.global.total_results }}</div> 
-{% for result in results.global %}
-   {% include  result_include %}
-{% endfor %}
-
-
-
+</div>
+</div>
 
 {% endblock %}

@@ -1,11 +1,4 @@
-<div>{{ result.kind }}</div>
-<div><a href="{{ result.link }}">{{ result.htmlTitle|safe }}</a></div>
-<div>{{ result.displayLink }}</div>
-<div>{{ result.title }}</div>
-<div>{{ result.formattedUrl }}</div>
-<div>{{ result.htmlFormattedUrl|safe }}</div>
-<div>{{ result.pagemap }}</div>
-<div>{{ result.snippet }}</div>
-<div>{{ result.htmlSnippet|safe }}</div>
-<div>{{ result.cacheId }}</div>
-<br><br>
+<div class="search-result">
+  <p><strong><a href="{{ result.link }}">{{ result.htmlTitle|safe }}</a></strong></p>
+  <div>{{ result.htmlSnippet|safe }}</div>
+</div>
