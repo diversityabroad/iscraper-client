@@ -5,17 +5,20 @@
 
 {% block head %}{{ block.super }}
 <script type="text/javascript">
+function loadResults(target, wrapper) {
+    var results = wrapper.find('>div');
+    results.css('opacity', .3);
+    wrapper.load(target+' #'+results.attr('id'));
+}
 $(document).ready(function(){
     $('.pagination a').live('click', function(){
-        var target = $(this).attr('href'),
-            wrapper = $(this).parents('.results-wrapper'),
-            results = wrapper.find('>div');
-        results.css('opacity', .3);
-        wrapper.load(target+' #'+results.attr('id'), function() {
-            
-        });
+        loadResults($(this).attr('href'), $(this).parents('.results-wrapper'));
+        window.history.pushState('','',$(this).attr('href'));
         return false;
     });
+    window.onpopstate = function() {
+        loadResults(location.pathname+location.search, $('#search-results-wrapper'));
+    };
 });
 </script>
 {% endblock %}
@@ -29,6 +32,8 @@ $(document).ready(function(){
  <p>{{ form.query }} <input type="submit" value="Search"></p>
 </form> 
 
+<div id="search-results-wrapper">
+<div id="search-results">
 <h3>Search Results: {{ SITE_NAME }}</h3>
 <div class="results-wrapper">
 <div id="local-results">
@@ -75,5 +80,6 @@ $(document).ready(function(){
 {% endif %}
 </div>
 </div>
-
+</div>
+</div>
 {% endblock %}
