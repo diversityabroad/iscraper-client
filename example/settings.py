@@ -109,6 +109,19 @@ SMARTSEARCH_AVAILABLE_ENGINES = [
 ]
 SMARTSEARCH_LOCAL_SITE="www.osfsaintfrancis.org"
 
+
+import logging
+logger = logging.getLogger('smartsearch')
+logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(lineno)s - %(levelname)s - %(message)s")
+
+# Configure log to stdout
+conlog = logging.StreamHandler()
+conlog.setLevel(logging.DEBUG)
+conlog.setFormatter(formatter)
+logger.addHandler(conlog)
+logger.propagate = True
+
 try:
     from local_settings import *
 except ImportError:
