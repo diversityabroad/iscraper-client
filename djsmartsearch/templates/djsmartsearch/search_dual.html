@@ -21,6 +21,14 @@ $(document).ready(function(){
     };
 });
 </script>
+<style type="text/css">
+  .pagination .prev-next {
+    float: right;
+  }
+  .search-result {
+    clear: both;
+  }
+</style>
 {% endblock %}
 
 
@@ -39,7 +47,8 @@ $(document).ready(function(){
 <div id="local-results">
 {% if meta.local.total_results %}
   <p class="pagination">
-    Showing results: <strong>{{ meta.local.start_index }} - {{ meta.local.end_index }}</strong> of {{ meta.local.total_results }}<br />
+    Showing results: <strong>{{ meta.local.start_index }} - {{ meta.local.end_index }}</strong> of {{ meta.local.total_results }}
+    <span class="prev-next">
     {% if meta.local.previous_page %}
       <a href="{% start_url request.get_full_path 'page_local,page' meta.local.previous_page  %}">Previous</a> 
       {% if meta.local.next_page %} | {% endif %}
@@ -47,6 +56,7 @@ $(document).ready(function(){
     {% if meta.local.next_page %}
       <a href="{% start_url request.get_full_path 'page_local,page' meta.local.next_page  %}">Next</a> 
     {% endif %}
+    </span>
   </p>
   {% for result in results.local %}
     {% include result_include %}
@@ -63,7 +73,8 @@ $(document).ready(function(){
 <div id="global-results">
 {% if meta.global.total_results %}
   <p class="pagination">
-    Showing results: <strong>{{ meta.global.start_index }} - {{ meta.global.end_index }}</strong> of {{ meta.global.total_results }}<br />
+    Showing results: <strong>{{ meta.global.start_index }} - {{ meta.global.end_index }}</strong> of {{ meta.global.total_results }}
+    <span class="prev-next">
     {% if meta.global.previous_page %}
       <a href="{% start_url request.get_full_path 'page,page_local' meta.global.previous_page  %}">Previous</a>
       {% if meta.global.next_page %} | {% endif %} 
@@ -71,6 +82,7 @@ $(document).ready(function(){
     {% if meta.global.next_page %}
       <a href="{% start_url request.get_full_path 'page,page_local' meta.global.next_page  %}">Next</a> 
     {% endif %}
+    </span>
   </p>
   {% for result in results.global %}
     {% include result_include %}
