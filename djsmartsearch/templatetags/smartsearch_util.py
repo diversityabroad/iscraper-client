@@ -53,10 +53,10 @@ def start_url(parser, token, node_cls=MergeKwargsNode):
 
 
 @register.filter
-def display_greater_than_100(value):
+def display_greater_than(value, max):
     return_value = "%s" % (value)
-    if value.isdigit() and int(value) > 100:
-        return_value = "%s (maximum 100 results returned)" % (return_value)
+    if value.isdigit() and int(value) > int(max):
+        return_value = "%s (maximum %s results returned)" % (return_value, max)
     return return_value
 
 
