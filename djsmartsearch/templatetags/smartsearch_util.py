@@ -51,3 +51,13 @@ def start_url(parser, token, node_cls=MergeKwargsNode):
         raise template.TemplateSyntaxError("%r tag requires exactly 3 arguments" % token.contents.split()[0])
     return node_cls(current_url, page_arg_names, start)
 
+
+@register.filter
+def display_greater_than_100(value):
+    return_value = "%s" % (value)
+    if value.isdigit() and int(value) > 100:
+        return_value = "%s (maximum 100 results returned)" % (return_value)
+    return return_value
+
+
+

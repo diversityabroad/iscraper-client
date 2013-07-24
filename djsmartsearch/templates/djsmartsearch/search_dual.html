@@ -47,7 +47,7 @@ $(document).ready(function(){
 <div id="local-results">
 {% if meta.local.total_results %}
   <p class="pagination">
-    Showing results: <strong>{{ meta.local.start_index }} - {{ meta.local.end_index }}</strong> of {{ meta.local.total_results }}
+    Showing results: <strong>{{ meta.local.start_index }} - {{ meta.local.end_index }}</strong> of {{ meta.local.total_results|display_greater_than_100 }}
     <span class="prev-next">
     {% if meta.local.previous_page %}
       <a href="{% start_url request.get_full_path 'page_local,page' meta.local.previous_page  %}">Previous</a> 
@@ -73,7 +73,7 @@ $(document).ready(function(){
 <div id="global-results">
 {% if meta.global.total_results %}
   <p class="pagination">
-    Showing results: <strong>{{ meta.global.start_index }} - {{ meta.global.end_index }}</strong> of {{ meta.global.total_results }}
+    Showing results: <strong>{{ meta.global.start_index }} - {{ meta.global.end_index }}</strong> of {{ meta.global.total_results|display_greater_than_100  }}
     <span class="prev-next">
     {% if meta.global.previous_page %}
       <a href="{% start_url request.get_full_path 'page,page_local' meta.global.previous_page  %}">Previous</a>
