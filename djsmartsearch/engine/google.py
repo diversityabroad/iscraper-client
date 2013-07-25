@@ -68,6 +68,7 @@ class SearchEngine(SearchEngineBase):
 
     def set_meta_from_response(self, response):
         meta = super(SearchEngine, self).set_meta_from_response(response)
+        has_next_page = has_previous_page = True
         if response: 
             try:
                 meta.update({'total_results':response['queries']['request'][0]['totalResults']})
@@ -79,13 +80,13 @@ class SearchEngine(SearchEngineBase):
                 meta.update({'next_page_start':response['queries']['nextPage'][0]['startIndex']})
             except:
                 logger.debug("Unable to parse queries.nextPage.startIndex from response.")
-                pass
+                has_next_page = False
             
             try:
                 meta.update({'previous_page_start':response['queries']['previousPage'][0]['startIndex']})
             except:
                 logger.debug("Unable to parse queries.previousPage.startIndex from response.")
-                pass
+                has_previous_page = False
             
             try:
                 start_index = response['queries']['request'][0]['startIndex']
@@ -95,9 +96,9 @@ class SearchEngine(SearchEngineBase):
                 
                 page = int(math.ceil(start_index / float(self.max_results_per_page)))
                 meta.update({'page':page})
-                if page > 1:
+                if page > 1 and has_previous_page:
                    meta.update({'previous_page':page - 1})
-                if page < self.max_pages:
+                if page < self.max_pages and has_next_page:
                     meta.update({'next_page':page + 1}) 
                 
                 meta.update({'count':count})
