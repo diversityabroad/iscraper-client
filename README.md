@@ -1,7 +1,3 @@
-from djsmartsearch.engine import  *
-e = load_engines()
-se = e['google']
-se.search(query='joe')
 
 
 1a) For Google search functionality, install the Google API Client
@@ -15,7 +11,7 @@ se.search(query='joe')
 
 2)  Set the following variables in settings.py
 
-The search engine needs to be set
+  2a)The search engine needs to be set
 
     SMARTSEARCH_AVAILABLE_ENGINES = [
         {'NAME':'google',
@@ -26,31 +22,33 @@ The search engine needs to be set
     ]
 
 
-This is the name of the logger to use.  The example below
-represents the default setting. 
+  2b) (optional) This is the name of the logger to use.  The example below
+  represents the default setting. If you want to capture logging, you also
+  need to setup up loggers.  See the example project for a very basic example 
+  of this. 
 
     SMARTSEARCH_LOGGER="smartsearch"
 
-This is the url to search for the local site search. 
+  2c) This is the url to search for the local site search. 
 
     SMARTSEARCH_LOCAL_SITE="www.osfsaintfrancis.org"
 
 
-Ensure the request context processor is set. 
+  2d) Ensure the request context processor is set. 
 
     TEMPLATE_CONTEXT_PROCESSORS = (
         ...
         'django.core.context_processors.request',
     )
 
-Add to installed apps: 
+  2e) Add to installed apps: 
 
     INSTALLED_APPS = (
         ...
         'djsmartsearch',
     )
 
-Set the cache backend to something: 
+  2f) Set the cache backend to something: 
    
     # for Django <=1.2
     CACHE_BACKEND = 'locmem://'
@@ -63,7 +61,7 @@ Set the cache backend to something:
         }
     }
     
-4) Add the following to urls.py
+3) Add the following to urls.py
 
     from djsmartsearch.views import DualGoogleSearchView
 
@@ -73,4 +71,12 @@ Set the cache backend to something:
     )
 
 
-    
+NOTES:
+
+# To connect to the engine and do a search from the command line
+from djsmartsearch.engine import  *
+e = load_engines()
+se = e['google']
+se.search(query='joe')
+
+   

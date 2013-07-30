@@ -1,3 +1,8 @@
+#################################
+# This example project requires django 1.1
+# This smartsearch2 'should' work with django 1.5+, but
+# that is untested.  
+#################################
 # Django settings for example project.
 import sys, os
 DEBUG = True
