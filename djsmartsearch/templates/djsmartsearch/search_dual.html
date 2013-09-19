@@ -36,8 +36,8 @@ $(document).ready(function(){
 <h1>{{ SITE_NAME }} | Search: {{ query }}</h1>
 
 <form method="get" action=".">
-  {{ form.query.errors }}{{ form.start.errors }}
- <p>{{ form.query }} <input type="submit" value="Search"></p>
+  {{ form.q.errors }}{{ form.start.errors }}
+ <p>{{ form.q }} <input type="submit" value="Search"></p>
 </form> 
 
 <div id="search-results-wrapper">

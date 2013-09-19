@@ -53,7 +53,7 @@ class DualGoogleSearchView(SearchView):
     engine_name = 'google'
 
     def form_valid(self, form):
-        self.query = form.cleaned_data['query']
+        self.query = form.cleaned_data['q']
         self.page = form.cleaned_data['page']
         self.page_local = form.cleaned_data['page_local']
         
