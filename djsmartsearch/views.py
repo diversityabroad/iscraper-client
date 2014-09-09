@@ -55,13 +55,36 @@ class SearchView(FormView):
             cache.set(key, (results, meta))
         return results, meta
 
+    def get_context_data(self, **kwargs):
+        kwargs.update({
+                       'config':self.config,
+                       'website':self.website,
+                       })
+        return super(SearchView, self).get_context_data(**kwargs)
+    
 
 class DualSearchView(SearchView):
     
+    http_method_names = [u'get', u'post',]
     template_name="djsmartsearch/search_dual.html"
     result_include="djsmartsearch/includes/result_template_google.html"
     form_class = smart_forms.SearchForm
-    engine_name = 'google'
+
+    def get(self, request, *args, **kwargs):
+        print(self.get_form_class())
+        return self.post(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        
+        kwargs = {
+            'initial': self.get_initial(),
+            'prefix': self.get_prefix(),
+        }
+        if self.request.method in ('GET'):
+            kwargs.update({
+                'data': self.request.GET,
+            })
+        return kwargs
 
     def form_valid(self, form):
         self.query = form.cleaned_data['q']
@@ -78,14 +101,12 @@ class DualSearchView(SearchView):
             results_global_key = "results_global" + ":".join(map(lambda x: "%s" % x, global_kwargs.values()))
             self.results['global'], self.meta['global'] = self.get_results(results_global_key, global_kwargs)
 
-        return self.render_to_response(self.get_context_data(form=form), )
+        return self.render_to_response(context=self.get_context_data(form=form), )
 
     def get_context_data(self, **kwargs):
         kwargs.update({'query':self.query, 
                        'results':self.results,
                        'result_include':self.result_include,
                        'meta':self.meta,
-                       'config':self.config,
-                       'website':self.website,
                        })
         return super(DualSearchView, self).get_context_data(**kwargs)

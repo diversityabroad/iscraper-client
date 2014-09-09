@@ -6,9 +6,6 @@
 1b) For use with Python <2.7, install the following
     easy_install importlib 
 
-1c) For use with Python <2.6, install the following
-	easy_install simplejson
-
 2)  Set the following variables in settings.py
 
   2a)The search engine needs to be set
@@ -31,8 +28,13 @@
 
   2c) This is the url to search for the local site search. 
 
+	# If using the Django site_config model backend
+	
     SMARTSEARCH_LOCAL_SITE="www.osfsaintfrancis.org"
 
+    # OR if using the Django site_config model_backend
+
+	Set this variable in the admin intervace
 
   2d) Ensure the request context processor is set. 
 
@@ -43,10 +45,22 @@
 
   2e) Add to installed apps: 
 
+	# if using the django site_config settings backend
+
     INSTALLED_APPS = (
         ...
         'djsmartsearch',
     )
+    
+    # OR if using the Django site_config model_backend: 
+    
+    INSTALLED_APPS = (
+        ...
+        'djsmartsearch',
+        'site_config',
+        'site_config.backends.model_backend',
+    )
+    
 
   2f) Set the cache backend to something: 
    
@@ -63,13 +77,23 @@
     
 3) Add the following to urls.py
 
-    from djsmartsearch.views import DualGoogleSearchView
+    from djsmartsearch.views import DualSearchView
+
+	# if using the django site_config settings backend
 
     urlpatterns = patterns('',
-        url(r'^search/$', DualGoogleSearchView.as_view()),
+        url(r'^search/$', DualSearchView.as_view()),
         ....
     )
 
+    # OR if using the Django site_config model_backend (and multi-site is desired):
+    
+    urlpatterns = patterns('',
+        url(r'^(?P<website>[\w-]+)/search/$', DualSearchView.as_view()), 
+        ....
+    )
+     
+           
 
 NOTES:
 

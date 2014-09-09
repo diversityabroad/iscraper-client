@@ -35,10 +35,11 @@ $(document).ready(function(){
 {% block content %}
 <h1>{{ SITE_NAME }} | Search: {{ query }}</h1>
 
-<form method="post" action=".">{% csrf_token %}
+<form method="get" action=".">
   {{ form.q.errors }}{{ form.start.errors }}
  <p>{{ form.q }} <input type="submit" value="Search"></p>
 </form> 
+
 
 <div id="search-results-wrapper">
 <div id="search-results">
@@ -76,11 +77,11 @@ $(document).ready(function(){
     Showing results: <strong>{{ meta.global.start_index }} - {{ meta.global.end_index }}</strong> of {{ meta.global.total_results|display_greater_than:100  }}
     <span class="prev-next">
     {% if meta.global.previous_page %}
-      <a href="{ start_url request.get_full_path 'page,page_local' meta.global.previous_page  %}">Previous</a>
+      <a href="{% start_url request.get_full_path 'page,page_local' meta.global.previous_page  %}">Previous</a>
       {% if meta.global.next_page %} | {% endif %} 
     {% endif %}
     {% if meta.global.next_page %}
-      <a href="{ start_url request.get_full_path 'page,page_local' meta.global.next_page  %}">Next</a> 
+      <a href="{% start_url request.get_full_path 'page,page_local' meta.global.next_page  %}">Next</a> 
     {% endif %}
     </span>
   </p>

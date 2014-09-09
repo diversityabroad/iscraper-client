@@ -11,6 +11,9 @@ urlpatterns = patterns('',
     # url(r'^$', 'example.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
+    # ADD THIS URL 
     url(r'^search/$', DualSearchView.as_view()),
+    # or ADD THIS URL FOR MULTI_SITE
+    url(r'^(?P<website>[\w-]+)/search/$', DualSearchView.as_view()),    
     (r'^admin/', include(admin.site.urls)),
 )
