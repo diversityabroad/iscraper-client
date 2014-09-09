@@ -21,6 +21,7 @@ setup(
     description='Search frontend tool.', 
     install_requires=[
        'django >= 1.6',
+       'site_config >= 0.0.6',
     ],
     long_description=read('README.md'),
     install_requires=dependencies,
