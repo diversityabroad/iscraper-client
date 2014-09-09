@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import urllib
 import urlparse
 from django import template

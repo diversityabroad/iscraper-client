@@ -1,6 +1,10 @@
+from __future__ import unicode_literals
 import logging
 import importlib
 from django.conf import settings
+from django.core import exceptions 
+import site_config
+
 
 SMARTSEARCH_AVAILABLE_ENGINES=[]
 
@@ -82,3 +86,39 @@ class SearchEngineBase(object):
         if num > self.max_results_per_page:
             num = self.max_results_per_page
         return num
+
+
+
+class SmartSearchConfig(site_config.SiteConfigBase):
+    application_short_name = "smartsearch"
+    application_verbose_name = "Smart Search"
+
+    def get_default_configs(self):
+        # do some input validation on engine setting
+        SMARTSEARCH_AVAILABLE_ENGINES = getattr(settings, 'SMARTSEARCH_AVAILABLE_ENGINES')
+        if not isinstance(SMARTSEARCH_AVAILABLE_ENGINES, list):
+            raise exceptions.ImproperlyConfigured("SMARTSEARCH_AVAILABLE_ENGINES must be set in settings.py")
+        elif not all(map(lambda x: x.has_key('NAME'), SMARTSEARCH_AVAILABLE_ENGINES)):
+            raise exceptions.ImproperlyConfigured(
+                "Each dictionary in settings.SMARTSEARCH_AVAILABLE_ENGINES must have a 'NAME' key.")
+        elif not all(map(lambda x: x.has_key('CLASS'), SMARTSEARCH_AVAILABLE_ENGINES)):
+            raise exceptions.ImproperlyConfigured(
+                "Each dictionary in settings.SMARTSEARCH_AVAILABLE_ENGINES must have a 'CLASS' key.")
+        # find value for default engine
+        if SMARTSEARCH_AVAILABLE_ENGINES > 0:
+            default_engine = SMARTSEARCH_AVAILABLE_ENGINES[0]["NAME"]
+        else:
+            default_engine = ""
+        return {            
+            "SMARTSEARCH_ENGINE":{
+                "default": default_engine,
+                "choices": [ (e['NAME'], e['CLASS'])  for e in SMARTSEARCH_AVAILABLE_ENGINES],
+                "field": 'django.forms.ChoiceField'
+            },
+            "SMARTSEARCH_LOCAL_SITE":{
+                "default": "http://example.com",
+                "field": 'django.forms.CharField'
+            },                
+        }
+
+site_config.registry.config_registry.register(SmartSearchConfig)
