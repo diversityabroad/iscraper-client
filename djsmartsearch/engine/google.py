@@ -23,7 +23,7 @@ SMARTSEARCH_AVAILABLE_ENGINES = [
      },
 ]
 """
-logger = logging.getLogger('%s.google' % getattr(settings, 'SMARTSEARCH_LOGGER', 'smartsearch'))
+logger = logging.getLogger('%s.google' % getattr(settings, 'SMARTSEARCH_LOGGER', 'djsmartsearch'))
 
 
 class SearchEngine(SearchEngineBase):

@@ -22,7 +22,7 @@ def load_engines():
         engines[engine['NAME']] = backend(name=engine['NAME'])
     return engines
 
-logger = logging.getLogger(getattr(settings, 'SMARTSEARCH_LOGGER', 'smartsearch'))
+logger = logging.getLogger(getattr(settings, 'SMARTSEARCH_LOGGER', 'djsmartsearch'))
 
 class SearchEngineBase(object):
     
