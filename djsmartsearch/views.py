@@ -1,5 +1,4 @@
 from __future__ import unicode_literals
-#from djsmartsearch.cbv_fallback import FormView
 from django.views.generic import FormView
 from djsmartsearch import forms as smart_forms
 from djsmartsearch.engine import  load_engines
