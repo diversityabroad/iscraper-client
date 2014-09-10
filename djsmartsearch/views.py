@@ -1,5 +1,4 @@
 from __future__ import unicode_literals
-#from djsmartsearch.cbv_fallback import FormView
 from django.views.generic import FormView
 from djsmartsearch import forms as smart_forms
 from djsmartsearch.engine import  load_engines
@@ -71,7 +70,6 @@ class DualSearchView(SearchView):
     form_class = smart_forms.SearchForm
 
     def get(self, request, *args, **kwargs):
-        print(self.get_form_class())
         return self.post(request, *args, **kwargs)
 
     def get_form_kwargs(self):
