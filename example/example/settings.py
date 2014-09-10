@@ -92,13 +92,16 @@ CACHE_BACKEND = 'locmem://'
 
 SITECONFIG_BACKEND_DEFAULT="site_config.backends.model_backend.DatabaseBackend"
 
-SMARTSEARCH_AVAILABLE_ENGINES = [
-    {'NAME':'google',
-     'CLASS':'djsmartsearch.engine.google.SearchEngine',
-     'GOOGLE_SITE_SEARCH_API_KEY':'',
-     'GOOGLE_SITE_SEARCH_SEID':'',
-     },
-]
+
+SMARTSEARCH_AVAILABLE_ENGINES = {
+   'google': {
+         'CLASS':'djsmartsearch.engine.google.SearchEngine',
+         'GOOGLE_SITE_SEARCH_API_KEY':'',
+         'GOOGLE_SITE_SEARCH_SEID':'',
+         },
+}
+
+
 SMARTSEARCH_LOCAL_SITE="www.osfsaintfrancis.org"
 
 

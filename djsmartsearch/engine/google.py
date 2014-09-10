@@ -15,13 +15,14 @@ from djsmartsearch.engine import SMARTSEARCH_AVAILABLE_ENGINES
 The following needs to be set in settings.py for 
 this search engine to operate properly. 
 
-SMARTSEARCH_AVAILABLE_ENGINES = [
-    {'NAME':'google',
-     'CLASS':'djsmartsearch.engine.google.SearchEngine',
-     'GOOGLE_SITE_SEARCH_API_KEY':'',
-     'GOOGLE_SITE_SEARCH_SEID':'',
-     },
-]
+SMARTSEARCH_AVAILABLE_ENGINES = {
+   'google': {
+         'CLASS':'djsmartsearch.engine.google.SearchEngine',
+         'GOOGLE_SITE_SEARCH_API_KEY':'',
+         'GOOGLE_SITE_SEARCH_SEID':'',
+         },
+}
+
 """
 logger = logging.getLogger('%s.google' % getattr(settings, 'SMARTSEARCH_LOGGER', 'smartsearch'))
 
@@ -35,7 +36,8 @@ class SearchEngine(SearchEngineBase):
         """
         Find the google search engine backend and establish a connection object.
         """
-        self.engine_info = filter(lambda x: 'NAME' in x.keys() and x['NAME'] is name, SMARTSEARCH_AVAILABLE_ENGINES)[0]
+        self.engine_name = name
+        self.engine_info = SMARTSEARCH_AVAILABLE_ENGINES.get(name, None)
         self.connection =  build('customsearch', 'v1', developerKey=self.engine_info['GOOGLE_SITE_SEARCH_API_KEY'])
     
     def fetch(self,  **kwargs):

@@ -14,12 +14,12 @@ if hasattr(settings, 'SMARTSEARCH_AVAILABLE_ENGINES'):
 def load_engines():
 
     engines = {}
-    for engine in SMARTSEARCH_AVAILABLE_ENGINES:
+    for name, engine in SMARTSEARCH_AVAILABLE_ENGINES.items():
         klass_str = "".join(engine['CLASS'].split(".")[-1:])
         module_str = ".".join(engine['CLASS'].split(".")[:-1])
         module = importlib.import_module(module_str)
         backend = getattr(module, klass_str)
-        engines[engine['NAME']] = backend(name=engine['NAME'])
+        engines[name] = backend(name=name)
     return engines
 
 logger = logging.getLogger(getattr(settings, 'SMARTSEARCH_LOGGER', 'smartsearch'))
@@ -96,23 +96,20 @@ class SmartSearchConfig(site_config.SiteConfigBase):
     def get_default_configs(self):
         # do some input validation on engine setting
         SMARTSEARCH_AVAILABLE_ENGINES = getattr(settings, 'SMARTSEARCH_AVAILABLE_ENGINES')
-        if not isinstance(SMARTSEARCH_AVAILABLE_ENGINES, list):
-            raise exceptions.ImproperlyConfigured("SMARTSEARCH_AVAILABLE_ENGINES must be set in settings.py")
-        elif not all(map(lambda x: x.has_key('NAME'), SMARTSEARCH_AVAILABLE_ENGINES)):
-            raise exceptions.ImproperlyConfigured(
-                "Each dictionary in settings.SMARTSEARCH_AVAILABLE_ENGINES must have a 'NAME' key.")
-        elif not all(map(lambda x: x.has_key('CLASS'), SMARTSEARCH_AVAILABLE_ENGINES)):
+        if not isinstance(SMARTSEARCH_AVAILABLE_ENGINES, dict):
+            raise exceptions.ImproperlyConfigured("SMARTSEARCH_AVAILABLE_ENGINES dictionary must be set in settings.py")
+        elif not all(map(lambda x: x[1].has_key("CLASS"), SMARTSEARCH_AVAILABLE_ENGINES.items())):
             raise exceptions.ImproperlyConfigured(
                 "Each dictionary in settings.SMARTSEARCH_AVAILABLE_ENGINES must have a 'CLASS' key.")
         # find value for default engine
-        if SMARTSEARCH_AVAILABLE_ENGINES > 0:
-            default_engine = SMARTSEARCH_AVAILABLE_ENGINES[0]["NAME"]
+        if len(SMARTSEARCH_AVAILABLE_ENGINES) > 0:
+            default_engine = SMARTSEARCH_AVAILABLE_ENGINES.keys()[0]
         else:
             default_engine = ""
         return {            
             "SMARTSEARCH_ENGINE":{
                 "default": default_engine,
-                "choices": [ (e['NAME'], e['CLASS'])  for e in SMARTSEARCH_AVAILABLE_ENGINES],
+                "choices": [ (e[0], e[1]['CLASS'])  for e in SMARTSEARCH_AVAILABLE_ENGINES.items()],
                 "field": 'django.forms.ChoiceField'
             },
             "SMARTSEARCH_LOCAL_SITE":{

@@ -10,14 +10,13 @@
 
   2a)The search engine needs to be set
 
-    SMARTSEARCH_AVAILABLE_ENGINES = [
-        {'NAME':'google',
-         'CLASS':'djsmartsearch.engine.google.SearchEngine',
-         'GOOGLE_SITE_SEARCH_API_KEY':'',
-         'GOOGLE_SITE_SEARCH_SEID':'',
-         },
-    ]
-
+	SMARTSEARCH_AVAILABLE_ENGINES = {
+	   'google': {
+		     'CLASS':'djsmartsearch.engine.google.SearchEngine',
+		     'GOOGLE_SITE_SEARCH_API_KEY':'',
+		     'GOOGLE_SITE_SEARCH_SEID':'',
+		     },
+	}
 
   2b) (optional) This is the name of the logger to use.  The example below
   represents the default setting. If you want to capture logging, you also
