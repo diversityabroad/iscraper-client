@@ -73,7 +73,16 @@
             'LOCATION': 'unique-snowflake'
         }
     }
-    
+  
+  2g) Add the site_config base_template context processor
+  
+    TEMPLATE_CONTEXT_PROCESSORS = (
+      ...
+      'site_config.context_processors.decide_base_template'
+       ...
+    )
+  
+  
 3) Add the following to urls.py
 
     from djsmartsearch.views import DualSearchView
