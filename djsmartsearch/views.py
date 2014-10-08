@@ -1,10 +1,18 @@
 from __future__ import unicode_literals
+import logging
+try:
+    from urllib.parse import quote
+except ImportError:
+    from urllib import quote
+import site_config
 from django.views.generic import FormView
 from djsmartsearch import forms as smart_forms
 from djsmartsearch.engine import  load_engines
 from django.core.cache import cache
 from django.conf import settings
 from .engine import SmartSearchConfig
+
+logger = logging.getLogger('%s' % getattr(settings, 'SMARTSEARCH_LOGGER', 'djsmartsearch'))
 
 class SearchView(FormView):
 
@@ -35,10 +43,12 @@ class SearchView(FormView):
         Lookup a given cache key and split out
         the search results and meta information from the key
         """
+        key = quote(key)
         meta = {}
         results = []
         lookup = cache.get(key)
         if lookup:
+            logger.debug("Search Cache Key Hit %s" % (key))
             results, meta = lookup
         return results, meta
     
@@ -49,9 +59,10 @@ class SearchView(FormView):
         """
         results, meta = self.get_cached(key)
         if not results:
+            logger.debug("Search Cache Key Miss %s" % (key))
             result_iter, meta = self.engine.search(**kwargs)
             results = [ r for r in result_iter ]
-            cache.set(key, (results, meta))
+            cache.set(quote(key), (results, meta))
         return results, meta
 
     def get_context_data(self, **kwargs):
@@ -85,7 +96,7 @@ class DualSearchView(SearchView):
         return kwargs
 
     def form_valid(self, form):
-        self.query = form.cleaned_data['q']
+        self.query = form.cleaned_data['q'].strip()
         self.page = form.cleaned_data['page']
         self.page_local = form.cleaned_data['page_local']
         
