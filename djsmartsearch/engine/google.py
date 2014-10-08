@@ -38,7 +38,6 @@ class SearchEngine(SearchEngineBase):
         """
         self.engine_name = name
         self.engine_info = SMARTSEARCH_AVAILABLE_ENGINES.get(name, None)
-        self.connection =  build('customsearch', 'v1', developerKey=self.engine_info['GOOGLE_SITE_SEARCH_API_KEY'])
     
     def fetch(self,  **kwargs):
         """
@@ -49,6 +48,12 @@ class SearchEngine(SearchEngineBase):
         
         One can use this method to test the connection. 
         """
+        
+        try:
+            connection =  build('customsearch', 'v1', developerKey=self.engine_info['GOOGLE_SITE_SEARCH_API_KEY'])
+        except Exception as e:
+            logger.exception(e)
+            raise # exception to be caught by _fetch_wrap
         api_seid = self.engine_info['GOOGLE_SITE_SEARCH_SEID']
         page = kwargs.get('page', 1)
         if not page:
@@ -60,13 +65,13 @@ class SearchEngine(SearchEngineBase):
         if not num:
             num = self.max_results_per_page
         try:
-            response = self.connection.cse().list( q=kwargs.get('query', ''), cx=api_seid, 
+            response = connection.cse().list( q=kwargs.get('query', ''), cx=api_seid, 
                             num=self._get_num_results(num),
                             start=start).execute()
             logger.debug("Fetched search results for search term '%s'." % (kwargs.get('query', '')))
-        except apiclient.errors.HttpError, e:
+        except apiclient.errors.HttpError as e:
             logger.exception(e)
-            raise 
+            raise # exception to be caught by _fetch_wrap
         return response 
 
     def set_meta_from_response(self, response):
