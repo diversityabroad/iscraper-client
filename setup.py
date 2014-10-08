@@ -1,13 +1,15 @@
 from __future__ import unicode_literals
 from setuptools import setup
-import re, os
+import re
+import os
 
 dependencies = []
-f = open(os.path.join(os.path.dirname(__file__), 'smartsearch_requirements.txt'))
+f = open(os.path.join(os.path.dirname(__file__),
+                      'smartsearch_requirements.txt'))
 for line in f:
-      li=line.strip()
-      if not (re.match("^[\s]*$", li) or re.match("^#.*", li)):
-          dependencies.append(li)
+    li = line.strip()
+    if not (re.match("^[\s]*$", li) or re.match("^#.*", li)):
+        dependencies.append(li)
 
 setup(
     name='django-smartsearch',
@@ -15,6 +17,6 @@ setup(
     author='Joe Jasinski',
     author_email='jjasinski@imagescape.com',
     url='git@git.imagescape.com:smartsearch2',
-    description='Search frontend tool.', 
+    description='Search frontend tool.',
     install_requires=dependencies,
 )
