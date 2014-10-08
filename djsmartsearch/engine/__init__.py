@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 import logging
 import importlib
 from django.conf import settings
-from django.core import exceptions 
+from django.core import exceptions
 import site_config
 
 
@@ -62,7 +62,7 @@ class SearchEngineBase(object):
     def _fetch_wrap(self, *args, **kwargs):
         try:
             response =  self.fetch(*args, **kwargs)
-        except Exception, e:
+        except Exception as e:
             logger.exception(e)
             response = None
         return response 
@@ -86,7 +86,6 @@ class SearchEngineBase(object):
         if num > self.max_results_per_page:
             num = self.max_results_per_page
         return num
-
 
 
 class SmartSearchConfig(site_config.SiteConfigBase):
