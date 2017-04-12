@@ -13,7 +13,7 @@ for line in f:
 
 setup(
     name='django-smartsearch',
-    version='0.1.1',
+    version='2.0.4',
     author='Joe Jasinski',
     author_email='jjasinski@imagescape.com',
     url='git@git.imagescape.com:smartsearch2',

@@ -4,7 +4,7 @@ try:
     from urllib.parse import quote
 except ImportError:
     from urllib import quote
-import site_config
+from site_config.utils import WebsiteOverrideTemplateViewMixin
 from django.views.generic import FormView
 from djsmartsearch import forms as smart_forms
 from djsmartsearch.engine import load_engines
@@ -12,11 +12,12 @@ from django.core.cache import cache
 from django.conf import settings
 from .engine import SmartSearchConfig
 
+
 logger = logging.getLogger(
     '%s' % getattr(settings, 'SMARTSEARCH_LOGGER', 'djsmartsearch'))
 
 
-class SearchView(FormView):
+class SearchView(WebsiteOverrideTemplateViewMixin, FormView):
 
     query = ''
     results = {}
