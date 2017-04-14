@@ -3,6 +3,9 @@
 
 {% block title %}Search: {{ query }}{% endblock %}
 
+{% block body_class %}onecol{% endblock %}
+{% block site_sidebar %}{% endblock %}
+
 {% block head %}{{ block.super }}
 <script type="text/javascript">
 function loadResults(target, wrapper) {
