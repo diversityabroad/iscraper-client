@@ -4,7 +4,7 @@
     pip install google-api-python-client
 
 1b) For use with Python <2.7, install the following
-    easy_install importlib 
+    easy_install importlib
 
 1c) For use with Python <2.6, install the following
 	easy_install simplejson
@@ -24,32 +24,32 @@
 
   2b) (optional) This is the name of the logger to use.  The example below
   represents the default setting. If you want to capture logging, you also
-  need to setup up loggers.  See the example project for a very basic example 
-  of this. 
+  need to setup up loggers.  See the example project for a very basic example
+  of this.
 
     SMARTSEARCH_LOGGER="smartsearch"
 
-  2c) This is the url to search for the local site search. 
+  2c) This is the url to search for the local site search.
 
     SMARTSEARCH_LOCAL_SITE="www.osfsaintfrancis.org"
 
 
-  2d) Ensure the request context processor is set. 
+  2d) Ensure the request context processor is set.
 
     TEMPLATE_CONTEXT_PROCESSORS = (
         ...
         'django.core.context_processors.request',
     )
 
-  2e) Add to installed apps: 
+  2e) Add to installed apps:
 
     INSTALLED_APPS = (
         ...
         'djsmartsearch',
     )
 
-  2f) Set the cache backend to something: 
-   
+  2f) Set the cache backend to something:
+
     # for Django <=1.2
     CACHE_BACKEND = 'locmem://'
 
@@ -60,7 +60,7 @@
             'LOCATION': 'unique-snowflake'
         }
     }
-    
+
 3) Add the following to urls.py
 
     from djsmartsearch.views import DualGoogleSearchView
@@ -79,4 +79,43 @@ e = load_engines()
 se = e['google']
 se.search(query='joe')
 
-   
+
+# The iscape_search backend
+
+
+1)  Set the following variables in settings.py
+
+  1a)The search engine needs to be set
+
+    SMARTSEARCH_AVAILABLE_ENGINES = [
+        {
+            'NAME': 'iscape_search',
+            'CLASS': 'djsmartsearch.engine.iscape_search.IscapeSearchEngine',
+            'QUERY_ENDPOINT': '',  # the query endpoitn from iscape search
+            'SEARCH_INDEX': '',  # the index you'll be searching
+            'ISCAPE_SEARCH_USER_KEY': '',  # your user_key that is set up in iscape_search
+         },
+    ]
+
+    2b) (optional) This is the name of the logger to use.  The example below
+    represents the default setting. If you want to capture logging, you also
+    need to setup up loggers.  See the example project for a very basic example
+    of this.
+
+      SMARTSEARCH_LOGGER="smartsearch"
+
+    2e) Add to installed apps:
+
+      INSTALLED_APPS = (
+          ...
+          'djsmartsearch',
+      )
+
+    3) Add the following to urls.py
+
+        from djsmartsearch.views import IscapeSearchView
+
+        urlpatterns = patterns('',
+            url(r'^search/$', IscapeSearchView.as_view()),
+            ....
+        )
