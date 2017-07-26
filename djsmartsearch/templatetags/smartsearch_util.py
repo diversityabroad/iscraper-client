@@ -2,13 +2,14 @@ import urllib
 import urlparse
 from django import template
 from django.template.defaulttags import Node
-try: # Python 2.4 shim
-  from urlparse import parse_qsl
+try:  # Python 2.4 shim
+    from urlparse import parse_qsl
 except ImportError:
-  from cgi import parse_qsl
+    from cgi import parse_qsl
 
 
 register = template.Library()
+
 
 class MergeKwargsNode(Node):
 
@@ -16,7 +17,7 @@ class MergeKwargsNode(Node):
         self.current_url = template.Variable(current_url)
         self.page_arg_names = template.Variable(page_arg_names)
         self.start = template.Variable(start)
-    
+
     def render(self, context):
         try:
             start = self.start.resolve(context)
@@ -24,21 +25,20 @@ class MergeKwargsNode(Node):
             page_arg_names = self.page_arg_names.resolve(context)
         except Exception:
             raise template.TemplateSyntaxError("Invalid variables passed to start_url tag")
-        
+
         names = page_arg_names.split(",")
 
-            
         params = {names[0]:start}
         url_parts = list(urlparse.urlparse(current_url))
         query = dict(parse_qsl(url_parts[4]))
         for name in names[1:]:
             if not query.has_key(name):
                 query.update({name:1})
-        
+
         query.update(params)
-        
+
         url_parts[4] = urllib.urlencode(query)
-        
+
         return urlparse.urlunparse(url_parts)
 
 
@@ -53,11 +53,21 @@ def start_url(parser, token, node_cls=MergeKwargsNode):
 
 
 @register.filter
+def display_iscape_result_url(value):
+    url = value.keys()[0]
+    return 'http:' + url
+
+
+@register.filter
+def display_iscape_result(value):
+    hits = value.values()[0]
+    return hits[0]['content']
+
+
+@register.filter
 def display_greater_than(value, max):
     return_value = "%s" % (value)
+    value = str(value)  # just in case value comes in as an int
     if value.isdigit() and int(value) > int(max):
         return_value = "%s (maximum %s results returned)" % (return_value, max)
     return return_value
-
-
-

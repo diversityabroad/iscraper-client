@@ -1,7 +1,7 @@
 #################################
 # This example project requires django 1.1
 # This smartsearch2 'should' work with django 1.5+, but
-# that is untested.  
+# that is untested.
 #################################
 # Django settings for example project.
 import sys, os
@@ -77,9 +77,9 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'example.urls'
 
 
-TEMPLATE_CONTEXT_PROCESSORS = ('django.core.context_processors.auth', 
-'django.core.context_processors.debug', 
-'django.core.context_processors.i18n', 
+TEMPLATE_CONTEXT_PROCESSORS = ('django.core.context_processors.auth',
+'django.core.context_processors.debug',
+'django.core.context_processors.i18n',
 'django.core.context_processors.media',
 'django.core.context_processors.request',
 )
@@ -106,13 +106,13 @@ INSTALLED_APPS = (
 CACHE_BACKEND = 'locmem://'
 
 SMARTSEARCH_AVAILABLE_ENGINES = [
-    {'NAME':'google',
-     'CLASS':'djsmartsearch.engine.google.SearchEngine',
-     'GOOGLE_SITE_SEARCH_API_KEY':'',
-     'GOOGLE_SITE_SEARCH_SEID':'',
+    {'NAME': 'google',
+     'CLASS': 'djsmartsearch.engine.google.SearchEngine',
+     'GOOGLE_SITE_SEARCH_API_KEY': '',
+     'GOOGLE_SITE_SEARCH_SEID': '',
      },
 ]
-SMARTSEARCH_LOCAL_SITE="www.osfsaintfrancis.org"
+SMARTSEARCH_LOCAL_SITE = "www.osfsaintfrancis.org"
 
 
 import logging
