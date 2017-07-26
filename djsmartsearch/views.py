@@ -31,28 +31,19 @@ class SearchView(FormView):
         lookup = cache.get(key)
         if lookup:
             results, meta = lookup
-        return False, meta
+        return results, meta
 
     def get_results(self, key, kwargs):
         """
         Perform the search and return the results.
         If a cached version of the results exist, return that.
         """
-        print("INSIDE GET RESULTS\n")
-        print(key)
-        print(kwargs)
-        print("WE PRINTED BOTH RESULTS AND LOCAL KWARGS")
         results, meta = self.get_cached(key)
         if not results:
-            print("we have no cache")
             result_iter, meta = self.engine.search(**kwargs)
 
             results = [r for r in result_iter]
-            print(results)
-            print("we got results!!!!")
             cache.set(key, (results, meta))
-        else:
-            print("we have cahce")
         return results, meta
 
 
@@ -71,8 +62,6 @@ class IscapeSearchView(SearchView):
             self.page = form.cleaned_data['page']
             kwargs = {'query': "%s" % (self.query), 'page': self.page}
             results_key = "results" + ":".join(map(lambda x: "%s" % x, kwargs.values()))
-            print(kwargs)
-            print("WE PRINTED KWAREGS IN FORM\n\n\n\n\n\n\n")
             self.results, self.meta = self.get_results(results_key, kwargs)
 
         return super(IscapeSearchView, self).form_valid(form)
@@ -83,8 +72,7 @@ class IscapeSearchView(SearchView):
                        'result_include': self.result_include,
                        'meta': self.meta,
                        })
-        print(kwargs)
-        print("WE PRINTED KWARGS")
+
         return super(IscapeSearchView, self).get_context_data(**kwargs)
 
 
@@ -105,21 +93,18 @@ class DualGoogleSearchView(SearchView):
             link_site = getattr(settings, 'SMARTSEARCH_LOCAL_SITE', None)
             local_kwargs = {'query': "site:%s %s" % (link_site, self.query), 'page': self.page_local}
             results_key = "results" + ":".join(map(lambda x: "%s" % x, local_kwargs.values()))
-            print(results_key)
-            print(local_kwargs)
-            print("WE PRIONTED RESULT KWARGS\n\n\n\n")
             self.results['local'], self.meta['local'] = self.get_results(results_key, local_kwargs)
 
-            global_kwargs = {'query':self.query, 'page':self.page}
+            global_kwargs = {'query': self.query, 'page': self.page}
             results_global_key = "results_global" + ":".join(map(lambda x: "%s" % x, global_kwargs.values()))
             self.results['global'], self.meta['global'] = self.get_results(results_global_key, global_kwargs)
 
         return super(DualGoogleSearchView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
-        kwargs.update({'query':self.query,
-                       'results':self.results,
-                       'result_include':self.result_include,
-                       'meta':self.meta,
+        kwargs.update({'query': self.query,
+                       'results': self.results,
+                       'result_include': self.result_include,
+                       'meta': self.meta,
                        })
         return super(DualGoogleSearchView, self).get_context_data(**kwargs)
