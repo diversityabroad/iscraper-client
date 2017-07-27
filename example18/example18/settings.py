@@ -46,7 +46,7 @@ SMARTSEARCH_AVAILABLE_ENGINES = [
         'NAME': 'iscape_search',
         'CLASS': 'djsmartsearch.engine.iscape_search.IscapeSearchEngine',
         'QUERY_ENDPOINT': 'http://localhost:8000/api/v1/search',
-        'SEARCH_INDEX': 'db495e2e04ee48c1a2183c7ee9a0b032',
+        'SEARCH_INDEX': 'iscraper-db495e2e04ee48c1a2183c7ee9a0b032',  # also with work with properly dashed uuid
         'ISCAPE_SEARCH_USER_KEY': '984f435c-3f4e-413e-8595-eadf8bd8564a',
      },
 ]
