@@ -16,6 +16,10 @@ class SearchView(FormView):
         """
         Load the appropriate search engine and set defaults.
         """
+        if 'template_name' in kwargs:
+            self.template_name = kwargs.pop('template_name')
+        if 'result_include' in kwargs:
+            self.result_include = kwargs.pop('result_include')
         self.results = {}
         self.meta = {}
         self.engine = load_engines()[self.engine_name]
@@ -49,8 +53,8 @@ class SearchView(FormView):
 
 class IscapeSearchView(SearchView):
 
-    template_name = 'iscapesearch/search_iscape.html'
-    result_include = "djsmartsearch/includes/result_template_iscape.html"
+    # template_name = 'iscapesearch/search_iscape.html'
+    # result_include = "djsmartsearch/includes/result_template_iscape.html"
     engine_name = 'iscape_search'
     form_class = smart_forms.SearchForm
 
@@ -83,6 +87,7 @@ class DualGoogleSearchView(SearchView):
     form_class = smart_forms.SearchForm
     engine_name = 'google'
 
+    # I'll have to test passing in vars with this...
     def form_valid(self, form):
         self.query = form.cleaned_data['q']
         self.page = form.cleaned_data['page']
