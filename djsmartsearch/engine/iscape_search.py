@@ -22,7 +22,7 @@ logger = logging.getLogger('%s.google' % getattr(settings, 'SMARTSEARCH_LOGGER',
 
 class IscapeSearchEngine(SearchEngineBase):
 
-    max_results_per_page = 2
+    max_results_per_page = 10
     max_pages = 10
 
     def __init__(self, name='iscape_search'):
