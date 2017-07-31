@@ -103,7 +103,7 @@ class SearchEngine(SearchEngineBase):
                     meta.update({'next_page':page + 1})
 
                 meta.update({'count':count})
-            except Exception, e:
+            except Exception as e:
                 logger.exception(e)
                 pass
 

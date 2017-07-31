@@ -1,10 +1,10 @@
-from distutils.core import setup
+from setuptools import setup, find_packages
 
 NAME = 'django-smartsearch'
 VERSION = '0.1.1'
 AUTHOR = 'Imaginary Landscape'
 DESCRIPTION = ''
-LONG_DESCRIPTION = long_description = open('README.md').read(),
+LONG_DESCRIPTION = ""
 
 setup(
     name=NAME,

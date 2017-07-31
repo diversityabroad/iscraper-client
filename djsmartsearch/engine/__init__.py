@@ -61,7 +61,7 @@ class SearchEngineBase(object):
     def _fetch_wrap(self, *args, **kwargs):
         try:
             response = self.fetch(*args, **kwargs)
-        except Exception, e:
+        except Exception as e:
             logger.exception(e)
             response = None
         return response

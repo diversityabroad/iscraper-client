@@ -97,7 +97,7 @@ class IscapeSearchEngine(SearchEngineBase):
                     meta['next_page'] = page + 1
 
                 meta['count'] = response['meta']['count']
-            except Exception, e:
+            except Exception as e:
                 logger.exception(e)
             return meta
 
