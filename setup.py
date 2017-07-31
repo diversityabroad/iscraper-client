@@ -1,20 +1,20 @@
 from distutils.core import setup
-import re, os
 
-dependencies = []
-f = open(os.path.join(os.path.dirname(__file__), 'smartsearch_requirements.txt'))
-for line in f:
-      li=line.strip()
-      if not (re.match("^[\s]*$", li) or re.match("^#.*", li)):
-          dependencies.append(li)
+NAME = 'django-smartsearch'
+VERSION = '0.1.1'
+AUTHOR = 'Imaginary Landscape'
+DESCRIPTION = ''
+LONG_DESCRIPTION = long_description = open('README.md').read(),
 
 setup(
-    name='django-smartsearch',
-    version='0.1.0',
-    author='Joe Jasinski',
-    author_email='jjasinski@imagescape.com',
+    name=NAME,
+    version=VERSION,
+    description=DESCRIPTION,
+    long_description=LONG_DESCRIPTION,
+    classifiers=('Framework :: Django'),
     url='',
-    description='',
-    long_description=open('README.md').read(),
-    install_requires=dependencies,
+    include_package_data=True,
+    install_requires=(
+        'google-api-python-client'
+    ),
 )

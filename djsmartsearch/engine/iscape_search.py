@@ -82,6 +82,8 @@ class IscapeSearchEngine(SearchEngineBase):
 
                 has_previous_page = start_index - self.max_results_per_page > 0
                 has_next_page = end_index < total_results
+                if end_index > total_results:
+                    end_index = total_results
 
                 page = int(math.ceil(start_index / float(self.max_results_per_page)))
 
