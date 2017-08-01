@@ -1,11 +1,15 @@
 import urllib
-import urlparse
+try:
+    import urlparse as url_parse
+except ImportError:
+    import urllib.parse as url_parse
 from django import template
 from django.template.defaulttags import Node
 try:  # Python 2.4 shim
     from urlparse import parse_qsl
 except ImportError:
-    from cgi import parse_qsl
+    from urllib.parse import parse_qsl
+    # from cgi import parse_qsl
 
 
 register = template.Library()
@@ -28,18 +32,21 @@ class MergeKwargsNode(Node):
 
         names = page_arg_names.split(",")
 
-        params = {names[0]:start}
-        url_parts = list(urlparse.urlparse(current_url))
+        params = {names[0]: start}
+        url_parts = list(url_parse.urlparse(current_url))
         query = dict(parse_qsl(url_parts[4]))
         for name in names[1:]:
-            if not query.has_key(name):
-                query.update({name:1})
+            if name not in query:
+                query.update({name: 1})
 
         query.update(params)
 
-        url_parts[4] = urllib.urlencode(query)
+        try:
+            url_parts[4] = urllib.urlencode(query)
+        except AttributeError:
+            url_parts[4] = url_parse.urlencode(query)
 
-        return urlparse.urlunparse(url_parts)
+        return url_parse.urlunparse(url_parts)
 
 
 @register.tag
@@ -54,13 +61,13 @@ def start_url(parser, token, node_cls=MergeKwargsNode):
 
 @register.filter
 def display_iscape_result_url(value):
-    url = value.keys()[0]
+    url = list(value.keys())[0]
     return 'http:' + url
 
 
 @register.filter
 def display_iscape_result(value):
-    hits = value.values()[0]
+    hits = list(value.values())[0]
     return hits[0]['content']
 
 

@@ -25,8 +25,21 @@ class IscapeSearchEngine(SearchEngineBase):
     max_results_per_page = 10
     max_pages = 10
 
-    def __init__(self, name='iscape_search'):
-        self.engine_info = filter(lambda x: 'NAME' in x.keys() and x['NAME'] is name, SMARTSEARCH_AVAILABLE_ENGINES)[0]
+    def _constructe_engine_from_settings(self, name):
+        def is_engine_present(_dict, name):
+            return 'NAME' in _dict and _dict['NAME'] is name
+        engine_info = [info for info in SMARTSEARCH_AVAILABLE_ENGINES if is_engine_present(info, name)]
+        if engine_info:
+            return engine_info[0]
+        else:
+            raise Exception("No engine named {0}, please check `SMARTSEARCH_AVAILABLE_ENGINES`"
+                            "inside your `settings.py`".format(name))
+
+    def __init__(self, name='iscape_search', config=None):
+        if config:
+            self.engine_info = config
+        else:
+            self.engine_info = self._constructe_engine_from_settings(name)
 
     def fetch(self, **kwargs):
         """

@@ -22,7 +22,7 @@ class SearchView(FormView):
             self.result_include = kwargs.pop('result_include')
         self.results = {}
         self.meta = {}
-        self.engine = load_engines()[self.engine_name]
+        self.engine = load_engines(config=config)[self.engine_name]
         super(SearchView, self).__init__(*args, **kwargs)
 
     def get_cached(self, key):
@@ -53,8 +53,8 @@ class SearchView(FormView):
 
 class IscapeSearchView(SearchView):
 
-    # template_name = 'iscapesearch/search_iscape.html'
-    # result_include = "djsmartsearch/includes/result_template_iscape.html"
+    template_name = 'iscapesearch/search_iscape.html'
+    result_include = "djsmartsearch/includes/result_template_iscape.html"
     engine_name = 'iscape_search'
     form_class = smart_forms.SearchForm
 

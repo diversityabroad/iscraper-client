@@ -8,7 +8,7 @@ if hasattr(settings, 'SMARTSEARCH_AVAILABLE_ENGINES'):
     SMARTSEARCH_AVAILABLE_ENGINES = settings.SMARTSEARCH_AVAILABLE_ENGINES
 
 
-def load_engines():
+def load_engines(config=None):
 
     engines = {}
     for engine in SMARTSEARCH_AVAILABLE_ENGINES:
@@ -16,7 +16,7 @@ def load_engines():
         module_str = ".".join(engine['CLASS'].split(".")[:-1])
         module = importlib.import_module(module_str)
         backend = getattr(module, klass_str)
-        engines[engine['NAME']] = backend(name=engine['NAME'])
+        engines[engine['NAME']] = backend(name=engine['NAME'], config=config)
     return engines
 
 

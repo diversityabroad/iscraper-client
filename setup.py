@@ -13,8 +13,12 @@ setup(
     long_description=LONG_DESCRIPTION,
     classifiers=('Framework :: Django'),
     url='',
+    packages=find_packages(),
+    package_data={'templates': ['*'], 'static': ['*']},
+    zip_safe=False,
     include_package_data=True,
     install_requires=(
-        'google-api-python-client'
+        'google-api-python-client',
+        'requests'
     ),
 )
