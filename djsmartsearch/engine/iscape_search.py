@@ -75,7 +75,7 @@ class IscapeSearchEngine(SearchEngineBase):
             response.raise_for_status()
         except Exception as e:  # this might have to change for bad responses...
             logger.exception(e)
-            raise
+            raise e
         return response.json()
 
     def set_meta_from_response(self, response):
