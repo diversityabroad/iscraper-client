@@ -22,7 +22,7 @@ class SearchView(FormView):
             self.result_include = kwargs.pop('result_include')
         self.results = {}
         self.meta = {}
-        self.engine = load_engines(config=config)[self.engine_name]
+        self.engine = load_engines()[self.engine_name]
         super(SearchView, self).__init__(*args, **kwargs)
 
     def get_cached(self, key):
