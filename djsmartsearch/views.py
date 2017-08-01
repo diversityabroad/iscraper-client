@@ -53,8 +53,8 @@ class SearchView(FormView):
 
 class IscapeSearchView(SearchView):
 
-    # template_name = 'iscapesearch/search_iscape.html'
-    # result_include = "djsmartsearch/includes/result_template_iscape.html"
+    template_name = 'iscapesearch/search_iscape.html'
+    result_include = "djsmartsearch/includes/result_template_iscape.html"
     engine_name = 'iscape_search'
     form_class = smart_forms.SearchForm
 
