@@ -72,6 +72,12 @@ def display_iscape_result(value):
 
 
 @register.filter
+def display_iscape_title(value):
+    hits = list(value.values())[0]
+    return hits[0].get('title', 'content')
+
+
+@register.filter
 def display_greater_than(value, max):
     return_value = "%s" % (value)
     value = str(value)  # just in case value comes in as an int
