@@ -1,49 +1,14 @@
 {% extends "base.html" %}
 {% load smartsearch_util %}
 
-{% block title %}Search: {{ query }} {% endblock %}
-
-{% block head %}{{ block.super }}
-<script type="text/javascript">
-function loadResults(target, wrapper) {
-    var results = wrapper.find('>div');
-    results.css('opacity', .3);
-    wrapper.load(target+' #'+results.attr('id'));
-}
-$(document).ready(function(){
-    $('.pagination a').live('click', function(){
-        loadResults($(this).attr('href'), $('#search-results-wrapper'));
-        window.history.pushState(null,null,$(this).attr('href'));
-        return false;
-    });
-    window.onpopstate = function() {
-        loadResults(location.pathname+location.search, $('#search-results-wrapper'));
-    };
-});
-</script>
-<style type="text/css">
-  .pagination .prev-next {
-    float: right;
-  }
-  .search-result {
-    clear: both;
-  }
-</style>
-{% endblock %}
-
-
 {% block content %}
-<h1>{{ SITE_NAME }} | Search: {{ query }}</h1>
-<form method="get" action=".">
-  {{ form.q.errors }}{{ form.start.errors }}
- <p>{{ form.q }} <input type="submit" value="Search"></p>
-</form>
+  <h1>{% block title %}Search: {{ query }}{% endblock %}</h1>
+  <form method="get" action=".">
+    {{ form.q.errors }}{{ form.start.errors }}
+   <p>{{ form.q }} <input type="submit" value="Search"></p>
+  </form>
 
-<div id="search-results-wrapper">
-  <div id="search-results">
-  <h3>Search Results: {{ SITE_NAME }}</h3>
-  <div class="results-wrapper">
-  <div id="local-results">
+  <h2>Search Results</h2>
   {% if meta.total_results %}
     <p class="pagination">
       Showing results: <strong>{{ meta.start_index }} - {{ meta.end_index }}</strong> of {{ meta.total_results|display_greater_than:100 }}
@@ -57,15 +22,12 @@ $(document).ready(function(){
       {% endif %}
       </span>
     </p>
+    <div id="search-results">
     {% for result in results %}
       {% include result_include %}
     {% endfor %}
+    </div>
   {% else %}
     <p>No results found</p>
   {% endif %}
-  </div>
-</div>
-
-
-
 {% endblock %}
