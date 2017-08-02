@@ -12,7 +12,6 @@
   {% if meta.total_results %}
     <p class="pagination">
       Showing results: <strong>{{ meta.start_index }} - {{ meta.end_index }}</strong> of {{ meta.total_results|display_greater_than:100 }}
-      <span class="prev-next">
       {% if meta.previous_page %}
         <a href="{% start_url request.get_full_path 'page' meta.previous_page  %}">Previous</a>
         {% if meta.next_page %} | {% endif %}
@@ -20,7 +19,6 @@
       {% if meta.next_page %}
         <a href="{% start_url request.get_full_path 'page' meta.next_page  %}">Next</a>
       {% endif %}
-      </span>
     </p>
     <div id="search-results">
     {% for result in results %}
