@@ -74,7 +74,7 @@ class IscapeSearchEngine(SearchEngineBase):
             response = requests.post(self.engine_info['QUERY_ENDPOINT'], data=data)
             response.raise_for_status()
         except Exception as e:  # this might have to change for bad responses...
-            logger.exception(e)
+            logger.exception(str(e))
             raise e
         return response.json()
 
