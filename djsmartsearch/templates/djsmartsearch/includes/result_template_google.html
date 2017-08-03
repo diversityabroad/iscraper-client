@@ -1,4 +1,4 @@
 <div class="search-result">
-  <p><strong><a href="{{ result.link }}">{{ result.htmlTitle|safe }}</a></strong></p>
-  <div>{{ result.htmlSnippet|safe }}</div>
+  <div class="search-result-title"><a href="{{ result.link }}">{{ result.htmlTitle|safe }}</a></div>
+  <div class="search-result-content">{{ result.htmlSnippet|safe }}</div>
 </div>

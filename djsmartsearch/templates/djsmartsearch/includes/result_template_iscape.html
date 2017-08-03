@@ -1,7 +1,7 @@
 {% load smartsearch_util %}
 
 <div class="search-result">
-  <p><strong><a href="{{ result|display_iscape_result_url }}">{{ result|display_iscape_title }}</a></strong></p>
-  <div>{{ result|display_iscape_result|safe }}</div>
-  <div>{{ result|display_iscape_result_url }}</div>
+  <div class="search-result-title"><a href="{{ result|display_iscape_result_url }}">{{ result|display_iscape_title }}</a></div>
+  <div class="search-result-content">{{ result|display_iscape_result|safe }}</div>
+  <div class="search-result-url">{{ result|display_iscape_result_url }}</div>
 </div>
