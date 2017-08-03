@@ -2,6 +2,10 @@
 
 <div class="search-result">
   <div class="search-result-title"><a href="{{ result|display_iscape_result_url }}">{{ result|display_iscape_title }}</a></div>
-  <div class="search-result-content">{{ result|display_iscape_result|safe }}</div>
+  {% with  result|display_iscape_result as result %}
+    {% if result != None %}
+      <div class="search-result-content">{{ result|safe }}</div>
+    {% endif %}
+  {% endwith %}
   <div class="search-result-url">{{ result|display_iscape_result_url }}</div>
 </div>

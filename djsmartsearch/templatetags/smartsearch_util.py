@@ -67,14 +67,20 @@ def display_iscape_result_url(value):
 
 @register.filter
 def display_iscape_result(value):
-    hits = list(value.values())[0]
-    return hits[0]['content']
+    page_hit = list(value.values())[0]  # only ever 1 here...
+    hit_results = page_hit['hits']
+    result = None
+    for hit in hit_results:
+        if hit.get('always_key_content_matches', None) != 'title':
+            result = hit['content']
+            break
+    return result
 
 
 @register.filter
 def display_iscape_title(value):
     hits = list(value.values())[0]
-    return hits[0].get('title', 'content')
+    return hits['always']['title']
 
 
 @register.filter
