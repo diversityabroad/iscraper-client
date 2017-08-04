@@ -80,7 +80,7 @@ def display_iscape_result(value):
 @register.filter
 def display_iscape_title(value):
     hits = list(value.values())[0]
-    return hits['always']['title']
+    return hits['always'].get('title', "")
 
 
 @register.filter
