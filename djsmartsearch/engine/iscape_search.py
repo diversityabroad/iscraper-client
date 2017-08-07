@@ -62,18 +62,22 @@ class IscapeSearchEngine(SearchEngineBase):
         if end_index is None:
             end_index = start_index + self.max_results_per_page
 
+        headers = {
+            'Username': self.engine_info['ISCAPE_SEARCH_USERNAME'],
+            'Userkey': self.engine_info['ISCAPE_SEARCH_USER_KEY']
+        }
+
         data = {
             'query': kwargs.pop('query', ''),
             'index': self.engine_info['SEARCH_INDEX'],
             'page_start': start_index,
             'page_end': end_index,
-            'user_key': self.engine_info['ISCAPE_SEARCH_USER_KEY']
         }
 
         try:
-            response = requests.post(self.engine_info['QUERY_ENDPOINT'], data=data)
+            response = requests.post(self.engine_info['QUERY_ENDPOINT'], headers=headers, data=data)
             response.raise_for_status()
-        except Exception as e:  # this might have to change for bad responses...
+        except Exception as e:
             logger.exception(str(e))
             raise e
         return response.json()
