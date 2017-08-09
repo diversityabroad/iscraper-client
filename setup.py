@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 NAME = 'django-smartsearch'
-VERSION = '0.1.3'
+VERSION = '0.1.4'
 AUTHOR = 'Imaginary Landscape'
 DESCRIPTION = ''
 LONG_DESCRIPTION = ""
