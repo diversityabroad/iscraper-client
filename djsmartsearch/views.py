@@ -42,12 +42,15 @@ class SearchView(FormView):
         Perform the search and return the results.
         If a cached version of the results exist, return that.
         """
-        results, meta = self.get_cached(key)
+        results = meta = None
+        if getattr(settings, 'SMARTSEARCH_USE_CACHE', True):
+            results, meta = self.get_cached(key)
         if not results:
             result_iter, meta = self.engine.search(**kwargs)
 
             results = [r for r in result_iter]
-            cache.set(key, (results, meta))
+            if getattr(settings, 'SMARTSEARCH_USE_CACHE', True):
+                cache.set(key, (results, meta))
         return results, meta
 
 
