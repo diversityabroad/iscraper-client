@@ -92,7 +92,7 @@ se.search(query='joe')
             'NAME': 'iscape_search',
             'CLASS': 'djsmartsearch.engine.iscape_search.IscapeSearchEngine',
             'QUERY_ENDPOINT': '',  # the query endpoitn from iscape search
-            'SEARCH_INDEX': '',  # the index you'll be searching
+            'INSTALLATION_ID': '',  # the installation_id you'll be searching
             'ISCAPE_SEARCH_USER_KEY': '',  # your user_key that is set up in iscape_search
          },
     ]

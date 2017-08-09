@@ -12,12 +12,22 @@ SMARTSEARCH_AVAILABLE_ENGINES = [
     {'NAME': 'iscape_search',
      'CLASS': 'djsmartsearch.engine.iscape_search.IscapeSearchEngine',
      'QUERY_ENDPOINT': '',
-     'SEARCH_INDEX': ''  # the uuid of the config
+     'INSTALLATION_ID': ''  # the uuid of the config
      'ISCAPE_SEARCH_USER_KEY': 'user's user_key specified from iscape_search'
      },
 ]
 """
-logger = logging.getLogger('%s.google' % getattr(settings, 'SMARTSEARCH_LOGGER', 'smartsearch'))
+logger = logging.getLogger(
+    '%s' % getattr(settings, 'SMARTSEARCH_LOGGER', __name__))
+
+
+def pretty_print_POST(req):
+    print('{}\n{}\n{}\n\n{}'.format(
+        '-----------START-----------',
+        req.method + ' ' + req.url,
+        '\n'.join('{}: {}'.format(k, v) for k, v in req.headers.items()),
+        req.body,
+    ))
 
 
 class IscapeSearchEngine(SearchEngineBase):
@@ -69,18 +79,28 @@ class IscapeSearchEngine(SearchEngineBase):
 
         data = {
             'query': kwargs.pop('query', ''),
-            'index': self.engine_info['SEARCH_INDEX'],
+            'installation_id': self.engine_info['INSTALLATION_ID'],
             'page_start': start_index,
             'page_end': end_index,
         }
 
+        req = requests.Request(
+            'POST',
+            self.engine_info['QUERY_ENDPOINT'],
+            headers=headers,
+            data=data)
+        prepared_request = req.prepare()
+        pretty_print_POST(prepared_request)
+        session = requests.Session()
+
         try:
-            response = requests.post(self.engine_info['QUERY_ENDPOINT'], headers=headers, data=data)
+            response = session.send(prepared_request)
+            logger.warning(" RESPONSE: {}".format(response.content))
             response.raise_for_status()
-        except Exception as e:
+        except Exception as e:  # this might have to change for bad responses...
             logger.exception(str(e))
-            raise e
-        return response.json()
+        else:
+            return response.json()
 
     def set_meta_from_response(self, response):
         meta = super(IscapeSearchEngine, self).set_meta_from_response(response)
@@ -116,7 +136,7 @@ class IscapeSearchEngine(SearchEngineBase):
                 meta['count'] = response['meta']['count']
             except Exception as e:
                 logger.exception(e)
-            return meta
+        return meta
 
     def get_iteration_root(self, response):
         return_value = []

@@ -28,7 +28,8 @@ class MergeKwargsNode(Node):
             current_url = self.current_url.resolve(context)
             page_arg_names = self.page_arg_names.resolve(context)
         except Exception:
-            raise template.TemplateSyntaxError("Invalid variables passed to start_url tag")
+            raise template.TemplateSyntaxError(
+                "Invalid variables passed to start_url tag")
 
         names = page_arg_names.split(",")
 
@@ -55,7 +56,8 @@ def start_url(parser, token, node_cls=MergeKwargsNode):
     try:
         tag_name, current_url, page_arg_names, start = token.split_contents()
     except ValueError:
-        raise template.TemplateSyntaxError("%r tag requires exactly 3 arguments" % token.contents.split()[0])
+        raise template.TemplateSyntaxError(
+            "%r tag requires exactly 3 arguments" % token.contents.split()[0])
     return node_cls(current_url, page_arg_names, start)
 
 
