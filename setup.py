@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 NAME = 'django-smartsearch'
-VERSION = '0.1.5'
+VERSION = '3.0.0'
 AUTHOR = 'Imaginary Landscape'
 DESCRIPTION = ''
 LONG_DESCRIPTION = ""
@@ -14,7 +14,6 @@ setup(
     classifiers=('Framework :: Django'),
     url='',
     packages=find_packages(),
-    package_data={'templates': ['*'], 'static': ['*']},
     zip_safe=False,
     include_package_data=True,
     install_requires=(
