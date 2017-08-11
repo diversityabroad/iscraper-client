@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 NAME = 'django-smartsearch'
-VERSION = '0.1.4'
+VERSION = '0.1.5'
 AUTHOR = 'Imaginary Landscape'
 DESCRIPTION = ''
 LONG_DESCRIPTION = ""
@@ -18,7 +18,11 @@ setup(
     zip_safe=False,
     include_package_data=True,
     install_requires=(
-        'google-api-python-client',
         'requests'
     ),
+    extras_require=({
+        'google': [
+            'google-api-python-client',
+        ]
+    }),
 )
