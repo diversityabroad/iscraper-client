@@ -25,7 +25,7 @@ def pretty_print_POST(req):
     print('{}\n{}\n{}\n\n{}'.format(
         '-----------START-----------',
         req.method + ' ' + req.url,
-        '\n'.join('{}: {}'.format(k, v) for k, v in req.headers.items()),
+        '\n'.join('{0}: {1}'.format(k, v) for k, v in req.headers.items()),
         req.body,
     ))
 
@@ -95,7 +95,7 @@ class IscapeSearchEngine(SearchEngineBase):
 
         try:
             response = session.send(prepared_request)
-            logger.warning(" RESPONSE: {}".format(response.content))
+            logger.warning(" RESPONSE: {0}".format(response.content))
             response.raise_for_status()
         except Exception as e:  # this might have to change for bad responses...
             logger.exception(str(e))
