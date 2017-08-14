@@ -1,19 +1,10 @@
 version: '3'
 
 services:
-  python3:
+  tox:
     build:
       context: ./
-      dockerfile: Dockerfile.python3
-    command: python manage.py runserver 0.0.0.0:8000
+      dockerfile: Dockerfile.tox
+    command: tox
     volumes:
       - .:/code
-    ports:
-      - "8080:8000"
-    # networks:
-    #   - iscrapernet
-
-networks:
-  default:
-    external:
-      name: iscapesearch_iscrapernet

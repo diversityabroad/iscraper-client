@@ -1,0 +1,10 @@
+FROM ubuntu:xenial
+
+RUN mkdir /code
+WORKDIR /code
+ADD . /code/
+RUN sh ./docker_utils/deadsnakes.sh
+
+RUN pip install tox  # install this in the default env
+
+WORKDIR /code

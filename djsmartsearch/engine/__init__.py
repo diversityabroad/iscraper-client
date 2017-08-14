@@ -1,5 +1,8 @@
 import logging
-import importlib
+try:
+    from importlib import import_module as module_importer
+except ImportError:
+    from django.utils.importlib import import_module as module_importer
 from django.conf import settings
 
 SMARTSEARCH_AVAILABLE_ENGINES = []
@@ -14,7 +17,7 @@ def load_engines(config=None):
     for engine in SMARTSEARCH_AVAILABLE_ENGINES:
         klass_str = "".join(engine['CLASS'].split(".")[-1:])
         module_str = ".".join(engine['CLASS'].split(".")[:-1])
-        module = importlib.import_module(module_str)
+        module = module_importer(module_str)
         backend = getattr(module, klass_str)
         engines[engine['NAME']] = backend(name=engine['NAME'], config=config)
     return engines
