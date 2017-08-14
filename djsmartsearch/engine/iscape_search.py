@@ -22,7 +22,7 @@ logger = logging.getLogger(
 
 
 def pretty_print_POST(req):
-    print('{1}\n{2}\n{3}\n\n{4}'.format(
+    print('{0}\n{1}\n{2}\n\n{3}'.format(
         '-----------START-----------',
         req.method + ' ' + req.url,
         '\n'.join('{0}: {1}'.format(k, v) for k, v in req.headers.items()),
