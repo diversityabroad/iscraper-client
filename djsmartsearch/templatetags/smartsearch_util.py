@@ -63,8 +63,9 @@ def start_url(parser, token, node_cls=MergeKwargsNode):
 
 @register.filter
 def display_iscape_result_url(value):
-    url = list(value.keys())[0]
-    return 'http:' + url
+    url = list(value.keys())[0]  # Python3 keys() returns a dictionary view object
+    schemes = value[url]['schemes']
+    return 'https:' + url if 'https' in schemes else 'http:' + url
 
 
 @register.filter
