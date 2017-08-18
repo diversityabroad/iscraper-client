@@ -4,14 +4,26 @@ unittest). These will both pass when you run "manage.py test".
 
 Replace these with more appropriate tests for your application.
 """
-import mock
 import json
-from django.test import TestCase
+import unittest
+import mock
+
+import sys
+import django
+django.conf = mock.MagicMock()
+# conf = mock.MagicMock()
+# conf.settings = {"SOME_DICT": "vlaue"}
+# sys.modules['django.conf'] = conf
+# sys.modules['djsmartsearch.engine.django.conf'] = conf
+# sys.modules['engine.django.conf'] = conf
+# sys.modules['django.utils.importlib'] = mock.MagicMock()
+# sys.modules['importlib'] = mock.MagicMock()
+
 
 from djsmartsearch.engine.iscape_search import IscapeSearchEngine
 
 
-class IscapeSearchTests(TestCase):
+class BaseTestClass(unittest.TestCase):
 
     mock_search_results = {
         "meta": {
@@ -42,6 +54,17 @@ class IscapeSearchTests(TestCase):
             }
         }]
     }
+
+    def mocked_logger(self, *args, **kwargs):
+        class MockedLogger:
+
+            def debug(self):
+                print("we would debug here.")
+
+            def exception(self):
+                print("we would log an exception here")
+
+        return MockedLogger()
 
     def mocked_requests_session_send(self, *args, **kwargs):
         class MockResponse:
@@ -88,6 +111,9 @@ class IscapeSearchTests(TestCase):
                            {'Username': 'admin', 'Userkey': 'SomeKey'},
                            "post data bytes")
 
+
+class IscapeSearchTests(BaseTestClass):
+
     search_config = {
         'INSTALLATION_ID': 'just some uuid',
         'QUERY_ENDPOINT': 'just some url',
@@ -95,21 +121,29 @@ class IscapeSearchTests(TestCase):
         'ISCAPE_SEARCH_USERNAME': 'just some username'
     }
 
-    def test_search(self):
-        with mock.patch('requests.Session', side_effect=self.mocked_session):
-            with mock.patch('requests.Request', side_effect=self.mocked_request):
-                engine = IscapeSearchEngine(config=self.search_config)
+    def test_nose(self):
+        print("OUTPUT?????")
+        self.assertEqual(True, True)
 
-                query = {'q': 'russia'}
-                kwargs = {'query': "%s" % (query), 'page': 1}
-                result_iter, meta = engine.search(**kwargs)
-                results = [r for r in result_iter]
+    # def test_search(self):
+    #     with mock.patch('requests.Session', side_effect=self.mocked_session):
+    #         with mock.patch('requests.Request', side_effect=self.mocked_request):
+    #             engine = IscapeSearchEngine(config=self.search_config)
+    #
+    #             query = {'q': 'russia'}
+    #             kwargs = {'query': "%s" % (query), 'page': 1}
+    #             result_iter, meta = engine.search(**kwargs)
+    #             results = [r for r in result_iter]
+    #
+    #             self.assertEqual(meta['total_results'], 2)
+    #             self.assertEqual(meta['start_index'], 1)
+    #             self.assertEqual(meta['end_index'], 2)
+    #             self.assertEqual(meta['count'], 2)
+    #             self.assertEqual(meta['page_next'], None)
+    #             self.assertEqual(meta['page_previous'], None)
+    #
+    #             self.assertEqual(results, self.mock_search_results['results'])
 
-                self.assertEqual(meta['total_results'], 2)
-                self.assertEqual(meta['start_index'], 1)
-                self.assertEqual(meta['end_index'], 2)
-                self.assertEqual(meta['count'], 2)
-                self.assertEqual(meta['page_next'], None)
-                self.assertEqual(meta['page_previous'], None)
 
-                self.assertEqual(results, self.mock_search_results['results'])
+if __name__ == '__main__':
+    unittest.main()
