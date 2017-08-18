@@ -23,7 +23,7 @@
    <p>{{ form.q }} <input type="submit" value="Search"></p>
   </form>
 
-  {% if meta.total_results %}
+  {% if search_meta.total_results %}
     {% include "iscapesearch/_search_pagination.html" %}
     <div id="search-results">
     {% for result in results %}

@@ -77,7 +77,8 @@ class IscapeSearchView(SearchView):
         kwargs.update({'query': self.query,
                        'results': self.results,
                        'result_include': self.result_include,
-                       'meta': self.meta,
+                       'meta': self.meta, # Kept for backwards compat. Use search_meta when possible
+                       'search_meta': self.meta,
                        })
 
         return super(IscapeSearchView, self).get_context_data(**kwargs)
