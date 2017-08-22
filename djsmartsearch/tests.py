@@ -9,18 +9,13 @@ import unittest
 import mock
 
 import sys
-import django
-django.conf = mock.MagicMock()
-# conf = mock.MagicMock()
-# conf.settings = {"SOME_DICT": "vlaue"}
-# sys.modules['django.conf'] = conf
-# sys.modules['djsmartsearch.engine.django.conf'] = conf
-# sys.modules['engine.django.conf'] = conf
-# sys.modules['django.utils.importlib'] = mock.MagicMock()
-# sys.modules['importlib'] = mock.MagicMock()
 
+conf = mock.MagicMock()
+conf.settings = {"SOME_DICT": "vlaue"}
+sys.modules['django.conf'] = conf
 
-from djsmartsearch.engine.iscape_search import IscapeSearchEngine
+from djsmartsearch import engine
+from djsmartsearch.engine import iscape_search
 
 
 class BaseTestClass(unittest.TestCase):
@@ -115,34 +110,39 @@ class BaseTestClass(unittest.TestCase):
 class IscapeSearchTests(BaseTestClass):
 
     search_config = {
+        'NAME': 'iscape_search',
         'INSTALLATION_ID': 'just some uuid',
         'QUERY_ENDPOINT': 'just some url',
         'ISCAPE_SEARCH_USER_KEY': 'just some userkey',
-        'ISCAPE_SEARCH_USERNAME': 'just some username'
+        'ISCAPE_SEARCH_USERNAME': 'just some username',
+        'CLASS': 'djsmartsearch.engine.iscape_search.IscapeSearchEngine',
     }
 
-    def test_nose(self):
-        print("OUTPUT?????")
-        self.assertEqual(True, True)
+    def test_engine_init(self):
+        iscape_search.SMARTSEARCH_AVAILABLE_ENGINES = [self.search_config]
+        engine.SMARTSEARCH_AVAILABLE_ENGINES = [self.search_config]
+        engines = engine.load_engines()
+        engine_object = engines[self.search_config['NAME']]
+        self.assertEqual(engine_object.engine_info, self.search_config)
 
-    # def test_search(self):
-    #     with mock.patch('requests.Session', side_effect=self.mocked_session):
-    #         with mock.patch('requests.Request', side_effect=self.mocked_request):
-    #             engine = IscapeSearchEngine(config=self.search_config)
-    #
-    #             query = {'q': 'russia'}
-    #             kwargs = {'query': "%s" % (query), 'page': 1}
-    #             result_iter, meta = engine.search(**kwargs)
-    #             results = [r for r in result_iter]
-    #
-    #             self.assertEqual(meta['total_results'], 2)
-    #             self.assertEqual(meta['start_index'], 1)
-    #             self.assertEqual(meta['end_index'], 2)
-    #             self.assertEqual(meta['count'], 2)
-    #             self.assertEqual(meta['page_next'], None)
-    #             self.assertEqual(meta['page_previous'], None)
-    #
-    #             self.assertEqual(results, self.mock_search_results['results'])
+    def test_engine_search(self):
+        with mock.patch('requests.Session', side_effect=self.mocked_session):
+            with mock.patch('requests.Request', side_effect=self.mocked_request):
+                engine = iscape_search.IscapeSearchEngine(config=self.search_config)
+
+                query = {'q': 'russia'}
+                kwargs = {'query': "%s" % (query), 'page': 1}
+                result_iter, meta = engine.search(**kwargs)
+                results = [r for r in result_iter]
+
+                self.assertEqual(meta['total_results'], 2)
+                self.assertEqual(meta['start_index'], 1)
+                self.assertEqual(meta['end_index'], 2)
+                self.assertEqual(meta['count'], 2)
+                self.assertEqual(meta['page_next'], None)
+                self.assertEqual(meta['page_previous'], None)
+
+                self.assertEqual(results, self.mock_search_results['results'])
 
 
 if __name__ == '__main__':

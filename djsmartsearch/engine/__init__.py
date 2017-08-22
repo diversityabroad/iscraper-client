@@ -4,8 +4,6 @@ try:
 except ImportError:
     from django.utils.importlib import import_module as module_importer  # I need to mock this??
 from django.conf import settings
-# p = django.conf??.__path__.__dict__
-# print(p)
 
 SMARTSEARCH_AVAILABLE_ENGINES = []
 
@@ -25,16 +23,7 @@ def load_engines(config=None):
     return engines
 
 
-print("WE ARE ABOUT TO print these settings...")
-
-print(settings)
-# print(type(settings))
-print("we printed anyting??")
-import sys
-# print(sys.modules.keys())
-# logger = logging.getLogger(
-#     '%s' % getattr(settings, 'SMARTSEARCH_LOGGER', __name__))
-# logger = logging.getLogger(getattr(settings, 'SMARTSEARCH_LOGGER', __name__))
+logger = logging.getLogger(getattr(settings, 'SMARTSEARCH_LOGGER', 'smartsearch'))
 
 
 class SearchEngineBase(object):
@@ -76,13 +65,13 @@ class SearchEngineBase(object):
         try:
             response = self.fetch(*args, **kwargs)
         except Exception as e:
-            # logger.exception(e)
+            logger.exception(e)
             response = None
         return response
 
     def search(self, *args, **kwargs):
         result_iter = []
-        # logger.debug("Searching with the following parameters %s" % (kwargs))
+        logger.debug("Searching with the following parameters %s" % (kwargs))
         response = self._fetch_wrap(*args, **kwargs)
         meta = self.set_meta_from_response(response)
         result_iter = self._iterate(response)
