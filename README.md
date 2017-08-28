@@ -119,3 +119,12 @@ se.search(query='joe')
             url(r'^search/$', IscapeSearchView.as_view()),
             ....
         )
+
+
+## Running Unit Tests
+
+The Iscraper Client is meant to be able to run on multiple versions of python. The project's `docker-compose` file currently defines a `tox` service that is able to run the project's test suite across almost all versions of python. To run the test suite, simple run:
+
+    docker-compose up
+
+This will take awhile the first time you build. In addition this will create a rather large amount of .tox files. Keeping them around speeds up subsequent tests runs.

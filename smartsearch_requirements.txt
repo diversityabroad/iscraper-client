@@ -1,5 +1,0 @@
-# Install using setup.py
-
-Django<=1.1.4
-google-api-python-client
-requests==2.18.2

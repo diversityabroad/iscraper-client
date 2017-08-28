@@ -1,1 +1,4 @@
--r ../iscapesearch_requirements.txt
+# Install using setup.py
+requests==2.18.1
+django==1.8.18
+-e ../
