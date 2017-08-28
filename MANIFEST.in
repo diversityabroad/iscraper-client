@@ -1,2 +1,2 @@
 include README.md
-recursive-include djsmartsearch/templates *
+recursive-include iscraper_client/templates *

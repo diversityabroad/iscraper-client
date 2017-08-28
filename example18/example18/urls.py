@@ -15,11 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from djsmartsearch.views import IscapeSearchView
+from iscraper_client.views import IscapeSearchView
 
 urlpatterns = [
     url(r'^search/$', IscapeSearchView.as_view(
         template_name='iscapesearch/search_iscape.html',
-        result_include='djsmartsearch/includes/result_template_iscape.html')),
+        result_include='iscraper_client/includes/result_template_iscape.html')),
     url(r'^admin/', admin.site.urls),
 ]

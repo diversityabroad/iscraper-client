@@ -1,7 +1,7 @@
 # Create your views here.
-from djsmartsearch.cbv_fallback import FormView
-from djsmartsearch import forms as smart_forms
-from djsmartsearch.engine import load_engines
+from iscraper_client.cbv_fallback import FormView
+from iscraper_client import forms as smart_forms
+from iscraper_client.engine import load_engines
 from django.core.cache import cache
 from django.conf import settings
 
@@ -57,7 +57,7 @@ class SearchView(FormView):
 class IscapeSearchView(SearchView):
 
     template_name = 'iscapesearch/search_iscape.html'
-    result_include = "djsmartsearch/includes/result_template_iscape.html"
+    result_include = "iscraper_client/includes/result_template_iscape.html"
     engine_name = 'iscape_search'
     form_class = smart_forms.SearchForm
 
@@ -86,8 +86,8 @@ class IscapeSearchView(SearchView):
 
 class DualGoogleSearchView(SearchView):
 
-    template_name = "djsmartsearch/search_dual.html"
-    result_include = "djsmartsearch/includes/result_template_google.html"
+    template_name = "iscraper_client/search_dual.html"
+    result_include = "iscraper_client/includes/result_template_google.html"
     form_class = smart_forms.SearchForm
     engine_name = 'google'
 

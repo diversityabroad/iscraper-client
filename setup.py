@@ -1,9 +1,9 @@
 from setuptools import setup, find_packages
 
-NAME = 'django-smartsearch'
-VERSION = '3.0.6'
+NAME = 'iscraper_client'
+VERSION = '1.0.0'
 AUTHOR = 'Imaginary Landscape'
-DESCRIPTION = ''
+DESCRIPTION = 'Client application for interacting with iscraper.imagescape.com'
 LONG_DESCRIPTION = ""
 
 setup(

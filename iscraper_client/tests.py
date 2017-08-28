@@ -14,8 +14,8 @@ conf = mock.MagicMock()
 conf.settings = {"SOME_DICT": "vlaue"}
 sys.modules['django.conf'] = conf
 
-from djsmartsearch import engine
-from djsmartsearch.engine import iscape_search
+from iscraper_client import engine
+from iscraper_client.engine import iscape_search
 
 
 class BaseTestClass(unittest.TestCase):
@@ -115,7 +115,7 @@ class IscapeSearchTests(BaseTestClass):
         'QUERY_ENDPOINT': 'just some url',
         'ISCAPE_SEARCH_USER_KEY': 'just some userkey',
         'ISCAPE_SEARCH_USERNAME': 'just some username',
-        'CLASS': 'djsmartsearch.engine.iscape_search.IscapeSearchEngine',
+        'CLASS': 'iscraper_client.engine.iscape_search.IscapeSearchEngine',
     }
 
     def test_engine_init(self):

@@ -7,8 +7,8 @@ except ImportError:
 import apiclient
 from django.conf import settings
 from apiclient.discovery import build
-from djsmartsearch.engine import SearchEngineBase
-from djsmartsearch.engine import SMARTSEARCH_AVAILABLE_ENGINES
+from iscraper_client.engine import SearchEngineBase
+from iscraper_client.engine import SMARTSEARCH_AVAILABLE_ENGINES
 
 """
 The following needs to be set in settings.py for
@@ -16,13 +16,13 @@ this search engine to operate properly.
 
 SMARTSEARCH_AVAILABLE_ENGINES = [
     {'NAME':'google',
-     'CLASS':'djsmartsearch.engine.google.SearchEngine',
+     'CLASS':'iscraper_client.engine.google.SearchEngine',
      'GOOGLE_SITE_SEARCH_API_KEY':'',
      'GOOGLE_SITE_SEARCH_SEID':'',
      },
 ]
 """
-logger = logging.getLogger('%s.google' % getattr(settings, 'SMARTSEARCH_LOGGER', 'smartsearch'))
+logger = logging.getLogger('%s.google' % getattr(settings, 'SMARTSEARCH_LOGGER', 'iscraper_client'))
 
 
 class SearchEngine(SearchEngineBase):

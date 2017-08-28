@@ -99,7 +99,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
-    'djsmartsearch',
+    'iscraper_client',
 )
 
 
@@ -107,7 +107,7 @@ CACHE_BACKEND = 'locmem://'
 
 SMARTSEARCH_AVAILABLE_ENGINES = [
     {'NAME': 'google',
-     'CLASS': 'djsmartsearch.engine.google.SearchEngine',
+     'CLASS': 'iscraper_client.engine.google.SearchEngine',
      'GOOGLE_SITE_SEARCH_API_KEY': '',
      'GOOGLE_SITE_SEARCH_SEID': '',
      },
@@ -116,7 +116,7 @@ SMARTSEARCH_LOCAL_SITE = "www.osfsaintfrancis.org"
 
 
 import logging
-logger = logging.getLogger('smartsearch')
+logger = logging.getLogger('iscraper_client')
 logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter("%(asctime)s - %(name)s - %(lineno)s - %(levelname)s - %(message)s")
 

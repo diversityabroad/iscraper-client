@@ -4,7 +4,8 @@ from django.conf.urls.defaults import *
 from django.contrib import admin
 admin.autodiscover()
 
-from djsmartsearch.views import DualGoogleSearchView
+from iscraper_client.views import DualGoogleSearchView
+
 
 urlpatterns = patterns('',
 

@@ -3,14 +3,14 @@ import logging
 import requests
 
 from django.conf import settings
-from djsmartsearch.engine import SearchEngineBase
-from djsmartsearch.engine import SMARTSEARCH_AVAILABLE_ENGINES
+from iscraper_client.engine import SearchEngineBase
+from iscraper_client.engine import SMARTSEARCH_AVAILABLE_ENGINES
 
 
 """
 SMARTSEARCH_AVAILABLE_ENGINES = [
     {'NAME': 'iscape_search',
-     'CLASS': 'djsmartsearch.engine.iscape_search.IscapeSearchEngine',
+     'CLASS': 'iscraper_client.engine.iscape_search.IscapeSearchEngine',
      'QUERY_ENDPOINT': '',
      'INSTALLATION_ID': ''  # the uuid of the config
      'ISCAPE_SEARCH_USER_KEY': 'user's user_key specified from iscape_search'

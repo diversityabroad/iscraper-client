@@ -1,4 +1,4 @@
-
+# The Google Search backend
 
 1a) For Google search functionality, install the Google API Client
     pip install google-api-python-client
@@ -15,7 +15,7 @@
 
     SMARTSEARCH_AVAILABLE_ENGINES = [
         {'NAME':'google',
-         'CLASS':'djsmartsearch.engine.google.SearchEngine',
+         'CLASS':'iscraper_client.engine.google.SearchEngine',
          'GOOGLE_SITE_SEARCH_API_KEY':'',
          'GOOGLE_SITE_SEARCH_SEID':'',
          },
@@ -45,7 +45,7 @@
 
     INSTALLED_APPS = (
         ...
-        'djsmartsearch',
+        'iscraper_client',
     )
 
   2f) Set the cache backend to something:
@@ -63,7 +63,7 @@
 
 3) Add the following to urls.py
 
-    from djsmartsearch.views import DualGoogleSearchView
+    from iscraper_client.views import DualGoogleSearchView
 
     urlpatterns = patterns('',
         url(r'^search/$', DualGoogleSearchView.as_view()),
@@ -74,7 +74,7 @@
 NOTES:
 
 # To connect to the engine and do a search from the command line
-from djsmartsearch.engine import  *
+from iscraper_client.engine import  *
 e = load_engines()
 se = e['google']
 se.search(query='joe')
@@ -90,7 +90,7 @@ se.search(query='joe')
     SMARTSEARCH_AVAILABLE_ENGINES = [
         {
             'NAME': 'iscape_search',
-            'CLASS': 'djsmartsearch.engine.iscape_search.IscapeSearchEngine',
+            'CLASS': 'iscraper_client.engine.iscape_search.IscapeSearchEngine',
             'QUERY_ENDPOINT': '',  # the query endpoitn from iscape search
             'INSTALLATION_ID': '',  # the installation_id you'll be searching
             'ISCAPE_SEARCH_USER_KEY': '',  # your user_key that is set up in iscape_search
@@ -108,12 +108,12 @@ se.search(query='joe')
 
       INSTALLED_APPS = (
           ...
-          'djsmartsearch',
+          'iscraper_client',
       )
 
     3) Add the following to urls.py
 
-        from djsmartsearch.views import IscapeSearchView
+        from iscraper_client.views import IscapeSearchView
 
         urlpatterns = patterns('',
             url(r'^search/$', IscapeSearchView.as_view()),
