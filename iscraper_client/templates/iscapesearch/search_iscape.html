@@ -30,7 +30,7 @@
       {% include result_include %}
     {% endfor %}
     </div>
-    {% include "iscapesearch/_search_pagination.html" %}
+    {% include "iscapesearch/_search_pagination.html" with page='page' %}
   {% else %}
     <p>No results found</p>
   {% endif %}
