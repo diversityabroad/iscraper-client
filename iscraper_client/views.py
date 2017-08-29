@@ -77,11 +77,49 @@ class IscapeSearchView(SearchView):
         kwargs.update({'query': self.query,
                        'results': self.results,
                        'result_include': self.result_include,
-                       'meta': self.meta, # Kept for backwards compat. Use search_meta when possible
+                       'meta': self.meta,  # Kept for backwards compat. Use search_meta when possible
                        'search_meta': self.meta,
                        })
 
         return super(IscapeSearchView, self).get_context_data(**kwargs)
+
+
+class MultiSearchView(IscapeSearchView):
+
+    template_name = 'iscapesearch/search_dual.html'
+    result_include = "iscraper_client/includes/result_template_iscape.html"
+
+    def form_valid(self, form):
+        self.query = form.cleaned_data['q']
+        self.page_one = form.cleaned_data['page']
+        self.page_two = form.cleaned_data['page_two']
+
+        if self.query:
+            installation_one_kwargs = {'query': "%s" % (self.query), 'page': self.page_one}
+            installation_one_key = "installation_one_results" + ":".join(map(
+                lambda x: "%s" % x, installation_one_kwargs.values()))
+            self.results['installation_one'], self.meta['installation_one'] = self.get_results(
+                installation_one_key, installation_one_kwargs)
+
+            # installtion two results
+            installation_two_kwargs = {'query': "%s" % (self.query), 'page': self.page_two}
+            installation_two_key = "installation_two_results" + ":".join(map(
+                lambda x: "%s" % x, installation_two_kwargs.values()))
+            self.results['installtion_two'], self.meta['installation_two'] = self.get_results(
+                installation_two_key, installation_one_kwargs
+            )
+
+        return super(MultiSearchView, self).form_valid(form)
+
+        def get_context_data(self, **kwargs):
+            kwargs.update({'query': self.query,
+                           'results': self.results,
+                           'result_include': self.result_include,
+                           'meta': self.meta,  # Kept for backwards compat. Use search_meta when possible
+                           'search_meta': self.meta,
+                           })
+
+            return super(IscapeSearchView, self).get_context_data(**kwargs)
 
 
 class DualGoogleSearchView(SearchView):

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load smartsearch_util %}
+
+{% block extra_css %}
+<style>
+  #search-results {
+    border-color: #777;
+    border-style: solid;
+    border-width: 1px 0;
+    padding: 1em 0 0;
+  }
+  .search-result {
+    margin: 0 0 1em;
+    padding: .25em;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>{% block title %}Search Results: {{ query }}{% endblock %}</h1>
+<form method="get" action="">
+  {{ form.q.errors }}{{ form.start.errors }}
+ <p>{{ form.q }} <input type="submit" value="Search"></p>
+</form>
+
+{% if search_meta.installation_one.total_results %}
+  {% include "iscapesearch/_search_pagination.html" %}
+  <div id="search-results">
+  {% for result in results.installtion_one %}
+    {% include result_include %}
+  {% endfor %}
+  </div>
+  {% include "iscapesearch/_search_pagination.html" with %}
+{% else %}
+  <p>No results found</p>
+{% endif %}
+{% endblock %}
