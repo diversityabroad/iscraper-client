@@ -92,7 +92,7 @@ class MultiSearchView(IscapeSearchView):
 
     def form_valid(self, form):
         self.query = form.cleaned_data['q']
-        self.page_one = form.cleaned_data['page']
+        self.page_one = form.cleaned_data['page_one']
         self.page_two = form.cleaned_data['page_two']
 
         if self.query:
