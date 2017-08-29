@@ -84,10 +84,11 @@ class IscapeSearchView(SearchView):
         return super(IscapeSearchView, self).get_context_data(**kwargs)
 
 
-class MultiSearchView(IscapeSearchView):
+class MultiSearchView(SearchView):
 
     template_name = 'iscapesearch/search_dual.html'
     result_include = "iscraper_client/includes/result_template_iscape.html"
+    engine_name = 'iscape_search'
     form_class = smart_forms.DualSearchForm
 
     def form_valid(self, form):
