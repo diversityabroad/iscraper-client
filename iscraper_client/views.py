@@ -37,7 +37,7 @@ class SearchView(FormView):
             results, meta = lookup
         return results, meta
 
-    def get_results(self, key, kwargs):
+    def get_results(self, key, kwargs, engine=None):
         """
         Perform the search and return the results.
         If a cached version of the results exist, return that.
@@ -46,7 +46,10 @@ class SearchView(FormView):
         if getattr(settings, 'SMARTSEARCH_USE_CACHE', True):
             results, meta = self.get_cached(key)
         if not results:
-            result_iter, meta = self.engine.search(**kwargs)
+            if engine is None:
+                result_iter, meta = self.engine.search(**kwargs)
+            else:
+                result_iter, meta = engine.search(**kwargs)
 
             results = [r for r in result_iter]
             if getattr(settings, 'SMARTSEARCH_USE_CACHE', True):
@@ -91,6 +94,19 @@ class MultiSearchView(SearchView):
     engine_name = 'iscape_search'
     form_class = smart_forms.DualSearchForm
 
+    def __init__(self, *args, **kwargs):
+        """
+        Load the appropriate search engine and set defaults.
+        """
+        if 'template_name' in kwargs:
+            self.template_name = kwargs.pop('template_name')
+        if 'result_include' in kwargs:
+            self.result_include = kwargs.pop('result_include')
+        self.results = {}
+        self.meta = {}
+        self.engine1 = load_engines(config=settings.SMARTSEARCH_AVAILABLE_ENGINES[0])[self.engine_name]
+        self.engine2 = load_engines(config=settings.SMARTSEARCH_AVAILABLE_ENGINES[1])[self.engine_name]
+
     def form_valid(self, form):
         self.query = form.cleaned_data['q']
         self.page_one = form.cleaned_data['page_one']
@@ -101,27 +117,26 @@ class MultiSearchView(SearchView):
             installation_one_key = "installation_one_results" + ":".join(map(
                 lambda x: "%s" % x, installation_one_kwargs.values()))
             self.results['installation_one'], self.meta['installation_one'] = self.get_results(
-                installation_one_key, installation_one_kwargs)
+                key=installation_one_key, kwargs=installation_one_kwargs, engine=self.engine1)
 
             # installtion two results
             installation_two_kwargs = {'query': "%s" % (self.query), 'page': self.page_two}
             installation_two_key = "installation_two_results" + ":".join(map(
                 lambda x: "%s" % x, installation_two_kwargs.values()))
-            self.results['installtion_two'], self.meta['installation_two'] = self.get_results(
-                installation_two_key, installation_one_kwargs
+            self.results['installation_two'], self.meta['installation_two'] = self.get_results(
+                key=installation_two_key, kwargs=installation_two_kwargs, engine=self.engine2
             )
 
         return super(MultiSearchView, self).form_valid(form)
 
-        def get_context_data(self, **kwargs):
-            kwargs.update({'query': self.query,
-                           'results': self.results,
-                           'result_include': self.result_include,
-                           'meta': self.meta,  # Kept for backwards compat. Use search_meta when possible
-                           'search_meta': self.meta,
-                           })
-
-            return super(IscapeSearchView, self).get_context_data(**kwargs)
+    def get_context_data(self, **kwargs):
+        kwargs.update({'query': self.query,
+                       'results': self.results,
+                       'result_include': self.result_include,
+                       'meta': self.meta,  # Kept for backwards compat. Use search_meta when possible
+                       'search_meta': self.meta,
+                       })
+        return super(MultiSearchView, self).get_context_data(**kwargs)
 
 
 class DualGoogleSearchView(SearchView):

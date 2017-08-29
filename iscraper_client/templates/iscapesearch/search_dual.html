@@ -24,9 +24,9 @@
 </form>
 
 {% if search_meta.installation_one.total_results %}
-  {% include "iscapesearch/_search_pagination.html" %}
+  {% include "iscapesearch/_search_pagination.html" with search_meta=search_meta.installation_one page='page_one' %}
   <div id="search-results">
-  {% for result in results.installtion_one %}
+  {% for result in results.installation_one %}
     {% include result_include %}
   {% endfor %}
   </div>
@@ -34,4 +34,17 @@
 {% else %}
   <p>No results found</p>
 {% endif %}
+
+{% if search_meta.installation_two.total_results %}
+  {% include "iscapesearch/_search_pagination.html" with search_meta=search_meta.installation_two page='page_two' %}
+  <div id="search-results">
+  {% for result in results.installation_two %}
+    {% include result_include %}
+  {% endfor %}
+  </div>
+  {% include "iscapesearch/_search_pagination.html" with search_meta=search_meta.installation_two page='page_two' %}
+{% else %}
+  <p>No results found</p>
+{% endif %}
+
 {% endblock %}
