@@ -1,6 +1,5 @@
 {% load smartsearch_util %}
 <p class="pagination search-pagination">
-  <p>{{ page }}</p>
   Showing results: <strong>{{ search_meta.start_index }} - {{ search_meta.end_index }}</strong> of {{ search_meta.total_results|display_greater_than:100 }}
   <span class="pagination-links">
   {% if search_meta.previous_page %}
