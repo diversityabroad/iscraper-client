@@ -88,6 +88,7 @@ class MultiSearchView(IscapeSearchView):
 
     template_name = 'iscapesearch/search_dual.html'
     result_include = "iscraper_client/includes/result_template_iscape.html"
+    form_class = smart_forms.DualSearchForm
 
     def form_valid(self, form):
         self.query = form.cleaned_data['q']

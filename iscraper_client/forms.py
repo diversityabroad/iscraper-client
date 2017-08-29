@@ -10,3 +10,14 @@ class SearchForm(forms.Form):
     page_local = forms.IntegerField(
         min_value=1, initial=1, required=False,
         error_messages={'invalid': "Page must be a positive integer."})
+
+
+class DualSearchForm(forms.Form):
+
+    q = forms.CharField(required=False)
+    page_one = forms.IntegerField(
+        min_value=1, initial=1, required=False,
+        error_messages={'invalid': "Page must be a positive integer."})
+    page_two = forms.IntegerField(
+        min_value=1, initial=1, required=False,
+        error_messages={'invalid': "Page must be a positive integer."})
