@@ -1,8 +1,8 @@
 {% load smartsearch_util %}
 
 <div class="search-result">
-  <div class="search-result-title"><a href="{{ result|display_iscape_result_url|truncate_snippit }}">{{ result|display_iscape_title }}</a></div>
-  {% with  result|display_iscape_result as result %}
+  <div class="search-result-title"><a href="{{ result|display_iscape_result_url }}">{{ result|display_iscape_title }}</a></div>
+  {% with  result|display_iscape_result|truncate_snippit as result %}
     {% if result != None %}
       <div class="search-result-content">{{ result|safe }}</div>
     {% endif %}
