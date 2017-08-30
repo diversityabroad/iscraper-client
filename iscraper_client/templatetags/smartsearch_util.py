@@ -4,6 +4,7 @@ try:
 except ImportError:
     import urllib.parse as url_parse
 from django import template
+from django.conf import settings
 from django.template.defaulttags import Node
 try:  # Python 2.4 shim
     from urlparse import parse_qsl
@@ -11,6 +12,7 @@ except ImportError:
     from urllib.parse import parse_qsl
     # from cgi import parse_qsl
 
+MAX_SNIPPIT_LENGTH = getattr(settings, 'MAX_SNIPPIT_LENGTH', 175)
 
 register = template.Library()
 
@@ -68,6 +70,15 @@ def display_iscape_result_url(value):
     if schemes is None:
         schemes = []
     return 'https:' + url if 'https' in schemes else 'http:' + url
+
+
+@register.filter
+def truncate_snippit(value):
+    if value:
+        if len(value) > MAX_SNIPPIT_LENGTH:
+            last_space = value.rfind(" ", 0, MAX_SNIPPIT_LENGTH)
+            value = value[:last_space] + " ..."
+    return value
 
 
 @register.filter
