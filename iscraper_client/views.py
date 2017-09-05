@@ -34,8 +34,9 @@ class SearchView(FormView):
         results = []
         lookup = cache.get(key)
         if lookup:
-            results, meta = lookup
-        return results, meta
+            results, meta, recommended_results = lookup
+        return results, meta, recommended_results
+
 
     def get_results(self, key, kwargs, engine=None):
         """
@@ -47,21 +48,24 @@ class SearchView(FormView):
             results, meta = self.get_cached(key)
         if not results:
             if engine is None:
-                result_iter, meta = self.engine.search(**kwargs)
+                result_iter, meta, recommended_iter = self.engine.search(**kwargs)
             else:
-                result_iter, meta = engine.search(**kwargs)
+                result_iter, meta, recommended_iter = engine.search(**kwargs)
 
             results = [r for r in result_iter]
+            recommended_results = [rr for rr in recommended_iter]
             if getattr(settings, 'SMARTSEARCH_USE_CACHE', True):
-                cache.set(key, (results, meta))
-        return results, meta
+                cache.set(key, (results, meta, recommended_results))
+        return results, meta, recommended_results
 
 
 class IscapeSearchView(SearchView):
 
     template_name = 'iscapesearch/search_iscape.html'
     result_include = "iscraper_client/includes/result_template_iscape.html"
+    recomennded_result_include = "iscraper_client/includes/recommended_result_template_iscape.html"
     engine_name = 'iscape_search'
+    recommended_results = {}
     form_class = smart_forms.SearchForm
 
     def form_valid(self, form):
@@ -72,19 +76,48 @@ class IscapeSearchView(SearchView):
             self.page = form.cleaned_data['page']
             kwargs = {'query': "%s" % (self.query), 'page': self.page}
             results_key = "results" + ":".join(map(lambda x: "%s" % x, kwargs.values()))
-            self.results, self.meta = self.get_results(results_key, kwargs)
+            self.results, self.meta, self.recommended_results = self.get_results(results_key, kwargs)
 
         return super(IscapeSearchView, self).form_valid(form)
 
+
+    def get(self, request, *args, **kwargs):
+        form_class = self.get_form_class()
+        form = form_class(data=request.GET)
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
+
     def get_context_data(self, **kwargs):
+        print(kwargs)
+        print("we printed kwargs")
         kwargs.update({'query': self.query,
                        'results': self.results,
+                       'recommended_results': self.recommended_results,
                        'result_include': self.result_include,
+                       'recommended_result_include': self.recomennded_result_include,
                        'meta': self.meta,  # Kept for backwards compat. Use search_meta when possible
                        'search_meta': self.meta,
                        })
 
         return super(IscapeSearchView, self).get_context_data(**kwargs)
+
+
+
+    # def get(self, request, *args, **kwargs):
+    #     """
+    #     Handles GET requests and instantiates a blank version of the form.
+    #     """
+    #     form = self.get_form()
+    #     return self.render_to_response(self.get_context_data(form=form))
 
 
 class MultiSearchView(SearchView):

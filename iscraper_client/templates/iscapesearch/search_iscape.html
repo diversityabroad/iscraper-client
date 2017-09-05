@@ -23,7 +23,17 @@
    <p>{{ form.q }} <input type="submit" value="Search"></p>
   </form>
 
+  {% if recommended_results|length > 0 %}
+    <h2>Recommended Results</h2>
+    <div id="search-results">
+    {% for recommended_result in recommended_results %}
+      {% include recommended_result_include %}
+    {% endfor %}
+    </div>
+  {% endif %}
+
   {% if search_meta.total_results %}
+    <h2>Results</h2>
     {% include "iscapesearch/_search_pagination.html" %}
     <div id="search-results">
     {% for result in results %}

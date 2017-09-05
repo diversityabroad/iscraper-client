@@ -1,0 +1,10 @@
+{% load smartsearch_util %}
+
+<div class="search-result">
+  <!-- Not sure I even need the tag -->
+  <div class="search-result-title"><a href="{{ recommended_result.link }}">{{ recommended_result.title }}</a></div>
+    {% if recommended_result != None %}
+      <div class="search-result-content">{{ recommended_result.description|safe }}</div>
+    {% endif %}
+    <div class="search-result-url">{{ recommended_result.link }}</div>
+</div>

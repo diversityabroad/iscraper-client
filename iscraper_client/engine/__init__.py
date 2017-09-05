@@ -77,9 +77,9 @@ class SearchEngineBase(object):
         result_iter = self._iterate(response)
         return result_iter, meta
 
-    def _iterate(self, response):
+    def _iterate(self, response, iteration_root='results'):
         if response:
-            for item in self.get_iteration_root(response):
+            for item in self.get_iteration_root(response, iteration_root):
                 yield self.parse_row(item)
 
     def _get_num_results(self, num):

@@ -40,14 +40,15 @@ INSTALLED_APPS = [
 
     'iscraper_client',
 ]
+SMARTSEARCH_USE_CACHE = False
 
 SMARTSEARCH_AVAILABLE_ENGINES = [
     {
         'NAME': 'iscape_search',
         'CLASS': 'iscraper_client.engine.iscape_search.IscapeSearchEngine',
-        'QUERY_ENDPOINT': 'http://app:8000/api/v1/search',
-        'INSTALLATION_ID': '322fede2-1363-48de-b5dd-a4fb1b8a11bc',  # also with work with properly dashed uuid
-        'ISCAPE_SEARCH_USER_KEY': 'e6625b3b-f71a-4fcd-8c66-3e1b2e832487',
+        'QUERY_ENDPOINT': 'http://localhost:8000/api/v1/search',
+        'INSTALLATION_ID': '36b95235-cf72-4ea0-9f8b-4abc6c1950be',  # also with work with properly dashed uuid
+        'ISCAPE_SEARCH_USER_KEY': '2b00a0b3-8b6d-40f7-9355-73bfc0d71c2b',
         'ISCAPE_SEARCH_USERNAME': 'admin'
      },
 ]

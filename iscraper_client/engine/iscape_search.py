@@ -138,10 +138,19 @@ class IscapeSearchEngine(SearchEngineBase):
                 logger.exception(e)
         return meta
 
-    def get_iteration_root(self, response):
+    def search(self, *args, **kwargs):
+        result_iter = []
+        logger.debug("Searching with the following parameters %s" % (kwargs))
+        response = self._fetch_wrap(*args, **kwargs)
+        meta = self.set_meta_from_response(response)
+        result_iter = self._iterate(response)
+        recommended_iter = self._iterate(response, iteration_root='recommended_results')
+        return result_iter, meta, recommended_iter
+
+    def get_iteration_root(self, response, root='results'):
         return_value = []
-        if isinstance(response, dict) and 'results' in response:
-            return_value = response['results']
+        if isinstance(response, dict) and root in response:
+            return_value = response[root]
         return return_value
 
     def parse_row(self, row):
