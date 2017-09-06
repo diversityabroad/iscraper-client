@@ -4,6 +4,7 @@ from iscraper_client import forms as smart_forms
 from iscraper_client.engine import load_engines
 from django.core.cache import cache
 from django.conf import settings
+from django.shortcuts import redirect
 
 
 class SearchView(FormView):
@@ -36,7 +37,6 @@ class SearchView(FormView):
         if lookup:
             results, meta, recommended_results = lookup
         return results, meta, recommended_results
-
 
     def get_results(self, key, kwargs, engine=None):
         """
@@ -78,8 +78,12 @@ class IscapeSearchView(SearchView):
             results_key = "results" + ":".join(map(lambda x: "%s" % x, kwargs.values()))
             self.results, self.meta, self.recommended_results = self.get_results(results_key, kwargs)
 
-        return super(IscapeSearchView, self).form_valid(form)
-
+        for result in self.recommended_results:
+            rec_result_type = result.get('type', None)
+            if rec_result_type is not None and rec_result_type == 'redirect':
+                redirect_url = result['redirect_url']
+                return redirect(redirect_url)
+        return self.render_to_response(self.get_context_data(form=form))
 
     def get(self, request, *args, **kwargs):
         form_class = self.get_form_class()
@@ -89,16 +93,7 @@ class IscapeSearchView(SearchView):
         else:
             return self.form_invalid(form)
 
-    def form_valid(self, form):
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def form_invalid(self, form):
-        return self.render_to_response(self.get_context_data(form=form))
-
-
     def get_context_data(self, **kwargs):
-        print(kwargs)
-        print("we printed kwargs")
         kwargs.update({'query': self.query,
                        'results': self.results,
                        'recommended_results': self.recommended_results,
@@ -109,15 +104,6 @@ class IscapeSearchView(SearchView):
                        })
 
         return super(IscapeSearchView, self).get_context_data(**kwargs)
-
-
-
-    # def get(self, request, *args, **kwargs):
-    #     """
-    #     Handles GET requests and instantiates a blank version of the form.
-    #     """
-    #     form = self.get_form()
-    #     return self.render_to_response(self.get_context_data(form=form))
 
 
 class MultiSearchView(SearchView):
