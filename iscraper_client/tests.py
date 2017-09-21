@@ -47,7 +47,21 @@ class BaseTestClass(unittest.TestCase):
                     "content": "The songs as we have them today are descended from songs heard in the earliest of years of the twentieth century in villages throughout <strong>Russia</strong>; and those songs in turn were merely the latest incarnation of music many years older still. "
                 }]
             }
-        }]
+        }],
+        "recommended_results": [
+            {
+              "link": "https://en.wikipedia.org/wiki/I,_Claudius",
+              "description": "Pretty good book",
+              "title": "I, Claudius",
+              "type": "recommended"
+            },
+            {
+              "link": "https://en.wikipedia.org/wiki/The_Book_of_the_New_Sun",
+              "description": "Gene wolfe at his best!",
+              "title": "The Book of the New Sun",
+              "type": "recommended"
+            }
+          ]
     }
 
     def mocked_logger(self, *args, **kwargs):
@@ -132,8 +146,9 @@ class IscapeSearchTests(BaseTestClass):
 
                 query = {'q': 'russia'}
                 kwargs = {'query': "%s" % (query), 'page': 1}
-                result_iter, meta = engine.search(**kwargs)
+                result_iter, meta, recommended_iter = engine.search(**kwargs)
                 results = [r for r in result_iter]
+                recs = [rr for rr in recommended_iter]
 
                 self.assertEqual(meta['total_results'], 2)
                 self.assertEqual(meta['start_index'], 1)
@@ -143,6 +158,7 @@ class IscapeSearchTests(BaseTestClass):
                 self.assertEqual(meta['page_previous'], None)
 
                 self.assertEqual(results, self.mock_search_results['results'])
+                self.assertEqual(recs, self.mock_search_results['recommended_results'])
 
 
 if __name__ == '__main__':

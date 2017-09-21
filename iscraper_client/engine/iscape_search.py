@@ -92,9 +92,10 @@ class IscapeSearchEngine(SearchEngineBase):
         prepared_request = req.prepare()
         pretty_print_POST(prepared_request)
         session = requests.Session()
+        session.verify = False
 
         try:
-            response = session.send(prepared_request, verify=False)
+            response = session.send(prepared_request)
             logger.warning(" RESPONSE: {0}".format(response.content))
             response.raise_for_status()
         except Exception as e:  # this might have to change for bad responses...
