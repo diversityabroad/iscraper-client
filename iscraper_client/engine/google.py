@@ -3,7 +3,7 @@ import math
 try:
     import json
 except ImportError:
-    import simplejson as json
+    import simplejson as json  # noqa
 import apiclient
 from django.conf import settings
 from apiclient.discovery import build
