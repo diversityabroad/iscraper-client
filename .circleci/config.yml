@@ -4,7 +4,7 @@
 #
 version: 2
 jobs:
-  build-iscraper:
+  build:
     docker:
       - image: ubuntu:xenial
     working_directory: /code/
@@ -24,3 +24,9 @@ jobs:
           name: run tests
           command: |
             tox
+
+workflows:
+  version: 2
+  build-client:
+    jobs:
+      - build
