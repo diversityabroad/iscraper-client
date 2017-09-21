@@ -1,0 +1,26 @@
+# Python CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+#
+version: 2
+jobs:
+  build-iscraper:
+    docker:
+      - image: ubuntu:xenial
+    working_directory: /code/
+    steps:
+      - checkout
+
+      - run:
+          name: apt deadsnakes
+          command: |
+            RUN sh ./docker_utils/deadsnakes.sh
+
+      - run:
+          name: install tox
+          command: pip install tox
+
+      - run:
+          name: run tests
+          command: |
+            tox
