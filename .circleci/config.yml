@@ -14,7 +14,7 @@ jobs:
       - run:
           name: apt deadsnakes
           command: |
-            RUN sh ./docker_utils/deadsnakes.sh
+            sh ./docker_utils/deadsnakes.sh
 
       - run:
           name: install tox
