@@ -2,7 +2,9 @@
 from iscraper_client.cbv_fallback import FormView
 from iscraper_client import forms as smart_forms
 from iscraper_client.engine import load_engines
+from iscraper_client.decorators import check_recaptcha
 from django.core.cache import cache
+from django.utils.decorators import method_decorator
 from django.conf import settings
 from django.shortcuts import redirect
 
@@ -38,6 +40,13 @@ class SearchView(FormView):
             results, meta, recommended_results = lookup
         return results, meta, recommended_results
 
+    def get_context_data(self, **kwargs):
+        google_site_key = getattr(settings, 'GOOGLE_SITE_KEY', None)
+        if google_site_key:
+            kwargs['google_site_key'] = google_site_key
+
+        return super(SearchView, self).get_context_data(**kwargs)
+
     def get_results(self, key, kwargs, engine=None):
         """
         Perform the search and return the results.
@@ -59,6 +68,7 @@ class SearchView(FormView):
         return results, meta, recommended_results
 
 
+@method_decorator(check_recaptcha, 'get')
 class IscapeSearchView(SearchView):
 
     template_name = 'iscapesearch/search_iscape.html'
@@ -106,6 +116,7 @@ class IscapeSearchView(SearchView):
         return super(IscapeSearchView, self).get_context_data(**kwargs)
 
 
+@method_decorator(check_recaptcha, 'get')
 class MultiSearchView(SearchView):
 
     template_name = 'iscapesearch/search_dual.html'
