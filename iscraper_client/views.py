@@ -68,7 +68,6 @@ class SearchView(FormView):
         return results, meta, recommended_results
 
 
-@method_decorator(check_recaptcha, 'get')
 class IscapeSearchView(SearchView):
 
     template_name = 'iscapesearch/search_iscape.html'
@@ -95,6 +94,7 @@ class IscapeSearchView(SearchView):
                 return redirect(redirect_url)
         return self.render_to_response(self.get_context_data(form=form))
 
+    @method_decorator(check_recaptcha)
     def get(self, request, *args, **kwargs):
         form_class = self.get_form_class()
         form = form_class(data=request.GET)
@@ -116,7 +116,6 @@ class IscapeSearchView(SearchView):
         return super(IscapeSearchView, self).get_context_data(**kwargs)
 
 
-@method_decorator(check_recaptcha, 'get')
 class MultiSearchView(SearchView):
 
     template_name = 'iscapesearch/search_dual.html'
@@ -136,6 +135,10 @@ class MultiSearchView(SearchView):
         self.meta = {}
         self.engine1 = load_engines(config=settings.SMARTSEARCH_AVAILABLE_ENGINES[0])[self.engine_name]
         self.engine2 = load_engines(config=settings.SMARTSEARCH_AVAILABLE_ENGINES[1])[self.engine_name]
+
+    @method_decorator(check_recaptcha)
+    def get(self, request, *args, **kwargs):
+        return super(MultiSearchView, self).get(request, *args, **kwargs)
 
     def form_valid(self, form):
         self.query = form.cleaned_data['q']
