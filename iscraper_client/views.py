@@ -72,7 +72,7 @@ class IscapeSearchView(SearchView):
 
     template_name = 'iscapesearch/search_iscape.html'
     result_include = "iscraper_client/includes/result_template_iscape.html"
-    recomennded_result_include = "iscraper_client/includes/recommended_result_template_iscape.html"
+    recommended_result_include = "iscraper_client/includes/recommended_result_template_iscape.html"
     engine_name = 'iscape_search'
     recommended_results = {}
     form_class = smart_forms.SearchForm
@@ -108,7 +108,7 @@ class IscapeSearchView(SearchView):
                        'results': self.results,
                        'recommended_results': self.recommended_results,
                        'result_include': self.result_include,
-                       'recommended_result_include': self.recomennded_result_include,
+                       'recommended_result_include': self.recommended_result_include,
                        'meta': self.meta,  # Kept for backwards compat. Use search_meta when possible
                        'search_meta': self.meta,
                        })
@@ -179,7 +179,6 @@ class DualGoogleSearchView(SearchView):
     form_class = smart_forms.SearchForm
     engine_name = 'google'
 
-    # I'll have to test passing in vars with this...
     def form_valid(self, form):
         self.query = form.cleaned_data['q']
         self.page = form.cleaned_data['page']
