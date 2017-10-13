@@ -82,8 +82,13 @@ class IscapeSearchEngine(SearchEngineBase):
             'installation_id': self.engine_info['INSTALLATION_ID'],
             'page_start': start_index,
             'page_end': end_index,
+            'raw_fields': ['title']
         }
 
+        print("\n\n\n")
+        print(data)
+        print("we printed data")
+        print("\n\n\n")
         req = requests.Request(
             'POST',
             self.engine_info['QUERY_ENDPOINT'],

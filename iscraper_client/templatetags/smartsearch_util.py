@@ -95,8 +95,13 @@ def display_iscape_result(value):
 
 @register.filter
 def display_iscape_title(value):
-    hits = list(value.values())[0]
-    return hits['always'].get('title', "")
+    page_hit = list(value.values())[0]
+    if page_hit.get("always", None):
+        return page_hit['always'].get('title', "")
+    hit_results = page_hit['hits']
+    for hit in hit_results:
+        if hit['field'] == 'title':
+            return hit['raw_content']
 
 
 @register.filter
