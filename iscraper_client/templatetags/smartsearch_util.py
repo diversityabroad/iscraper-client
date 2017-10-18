@@ -95,13 +95,17 @@ def display_iscape_result(value):
 
 @register.filter
 def display_iscape_title(value):
+    # accomadates both v1 and v2 api response to grab site title
     page_hit = list(value.values())[0]
     if page_hit.get("always", None):
         return page_hit['always'].get('title', "")
+    if page_hit.get('title', None):
+        return page_hit['title']
     hit_results = page_hit['hits']
     for hit in hit_results:
         if hit['field'] == 'title':
             return hit['raw_content']
+    return ''
 
 
 @register.filter
