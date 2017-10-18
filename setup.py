@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 NAME = 'iscraper_client'
-VERSION = '4.0.14'
+VERSION = '4.0.12'
 AUTHOR = 'Imaginary Landscape'
 DESCRIPTION = 'Client application for interacting with iscraper.imagescape.com'
 LONG_DESCRIPTION = ""
