@@ -86,25 +86,42 @@ def display_iscape_result(value):
     page_hit = list(value.values())[0]  # only ever 1 here...
     hit_results = page_hit['hits']
     result = None
-    for hit in hit_results:
-        if hit.get('always_key_content_matches', None) != 'title':
-            result = hit['content']
-            break
-    return result
+
+    # v1 has the `always` block
+    if page_hit.get('always', False):
+        for hit in hit_results:
+            if hit.get('always_key_content_matches', None) != 'title':
+                result = hit['content']
+                break
+        return result
+    else:
+        for hit in hit_results:
+            if hit.get('field', None) != 'title':
+                result = hit['content']
+                break
+        return result
 
 
 @register.filter
 def display_iscape_title(value):
     # accomadates both v1 and v2 api response to grab site title
     page_hit = list(value.values())[0]
-    if page_hit.get("always", None):
-        return page_hit['always'].get('title', "")
+
+    # v1 api has title field returned in an "always" block
+    if page_hit.get('always', None):
+        return page_hit['always'].get('title', '')
+
+    # v2 api has title field returned in a `title` block if `save matched` was marked
+    # `True` in the django section admin.
     if page_hit.get('title', None):
         return page_hit['title']
+
+    # we can also look for title content in the `raw_fields` block if it
+    # was requested (v2 feature)
     hit_results = page_hit['hits']
     for hit in hit_results:
-        if hit['field'] == 'title':
-            return hit['raw_content']
+        if hit.get('field', None) == 'title':
+            return hit.get('raw_content', '')
     return ''
 
 
