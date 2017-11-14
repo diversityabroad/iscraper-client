@@ -149,14 +149,14 @@ class MultiSearchView(SearchView):
             installation_one_kwargs = {'query': "%s" % (self.query), 'page': self.page_one}
             installation_one_key = "installation_one_results" + ":".join(map(
                 lambda x: "%s" % x, installation_one_kwargs.values()))
-            self.results['installation_one'], self.meta['installation_one'] = self.get_results(
+            self.results['installation_one'], self.meta['installation_one'], _ = self.get_results(
                 key=installation_one_key, kwargs=installation_one_kwargs, engine=self.engine1)
 
             # installtion two results
             installation_two_kwargs = {'query': "%s" % (self.query), 'page': self.page_two}
             installation_two_key = "installation_two_results" + ":".join(map(
                 lambda x: "%s" % x, installation_two_kwargs.values()))
-            self.results['installation_two'], self.meta['installation_two'] = self.get_results(
+            self.results['installation_two'], self.meta['installation_two'], _ = self.get_results(
                 key=installation_two_key, kwargs=installation_two_kwargs, engine=self.engine2
             )
 
