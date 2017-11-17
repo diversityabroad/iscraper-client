@@ -91,7 +91,7 @@ se.search(query='joe')
         {
             'NAME': 'iscape_search',
             'CLASS': 'iscraper_client.engine.iscape_search.IscapeSearchEngine',
-            'QUERY_ENDPOINT': '',  # the query endpoitn from iscape search
+            'QUERY_ENDPOINT': '',  # the query endpoint from iscape search
             'INSTALLATION_ID': '',  # the installation_id you'll be searching
             'ISCAPE_SEARCH_USER_KEY': '',  # your user_key that is set up in iscape_search
          },
