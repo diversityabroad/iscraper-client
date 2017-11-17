@@ -55,7 +55,7 @@ class SearchView(FormView):
         """
         results = meta = None
         if getattr(settings, 'SMARTSEARCH_USE_CACHE', True):
-            results, meta = self.get_cached(key)
+            results, meta, recommended_results = self.get_cached(key)
         if not results:
             if engine is None:
                 result_iter, meta, recommended_iter = self.engine.search(**kwargs)
