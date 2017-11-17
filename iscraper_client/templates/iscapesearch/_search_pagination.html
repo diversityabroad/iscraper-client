@@ -4,11 +4,11 @@
   <span class="pagination-links">
   {% if search_meta.previous_page %}
 
-    <a href="{% start_url request.get_full_path page search_meta.previous_page  %}">Previous</a>
+    <a href="{% start_url request.get_full_path 'page' search_meta.previous_page  %}">Previous</a>
     {% if search_meta.next_page %} | {% endif %}
   {% endif %}
   {% if search_meta.next_page %}
-    <a href="{% start_url request.get_full_path page search_meta.next_page  %}">Next</a>
+    <a href="{% start_url request.get_full_path 'page' search_meta.next_page  %}">Next</a>
   {% endif %}
   </span>
 </p>
