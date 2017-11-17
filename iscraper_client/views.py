@@ -35,6 +35,7 @@ class SearchView(FormView):
         """
         meta = {}
         results = []
+        recommended_results = []
         lookup = cache.get(key)
         if lookup:
             results, meta, recommended_results = lookup
