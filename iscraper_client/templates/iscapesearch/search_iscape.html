@@ -1,6 +1,18 @@
 {% extends "base.html" %}
 {% load smartsearch_util %}
 
+{% block head %}
+{{ block.super }}
+{% if google_site_key %}
+<script src='https://www.google.com/recaptcha/api.js'></script>
+<script>
+       function onSubmit(token) {
+         document.getElementById("search-form").submit();
+       }
+</script>
+{% endif %}
+{% endblock %}
+
 {% block extra_css %}
 <style>
   #search-results {
@@ -18,9 +30,16 @@
 
 {% block content %}
   <h1>{% block title %}Search Results: {{ query }}{% endblock %}</h1>
-  <form method="get" action="">
+  <form id='search-form' method="get" action="">
     {{ form.q.errors }}{{ form.start.errors }}
-   <p>{{ form.q }} <input type="submit" value="Search"></p>
+    {% if google_site_key %}
+    <p>{{ form.q }} <button class="g-recaptcha"
+                            data-sitekey="{{ google_site_key }}"
+                            data-callback='onSubmit'
+                            type="submit">Search</button></p>
+    {% else %}
+    <p>{{ form.q}} <input type="submit" value="Search"></p>
+    {% endif %}
   </form>
 
   {% if recommended_results|length > 0 %}

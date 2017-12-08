@@ -2,7 +2,9 @@
 from iscraper_client.cbv_fallback import FormView
 from iscraper_client import forms as smart_forms
 from iscraper_client.engine import load_engines
+from iscraper_client.decorators import check_recaptcha
 from django.core.cache import cache
+from django.utils.decorators import method_decorator
 from django.conf import settings
 from django.shortcuts import redirect
 
@@ -33,10 +35,18 @@ class SearchView(FormView):
         """
         meta = {}
         results = []
+        recommended_results = []
         lookup = cache.get(key)
         if lookup:
             results, meta, recommended_results = lookup
         return results, meta, recommended_results
+
+    def get_context_data(self, **kwargs):
+        google_site_key = getattr(settings, 'GOOGLE_SITE_KEY', None)
+        if google_site_key:
+            kwargs['google_site_key'] = google_site_key
+
+        return super(SearchView, self).get_context_data(**kwargs)
 
     def get_results(self, key, kwargs, engine=None):
         """
@@ -45,7 +55,7 @@ class SearchView(FormView):
         """
         results = meta = None
         if getattr(settings, 'SMARTSEARCH_USE_CACHE', True):
-            results, meta = self.get_cached(key)
+            results, meta, recommended_results = self.get_cached(key)
         if not results:
             if engine is None:
                 result_iter, meta, recommended_iter = self.engine.search(**kwargs)
@@ -63,7 +73,7 @@ class IscapeSearchView(SearchView):
 
     template_name = 'iscapesearch/search_iscape.html'
     result_include = "iscraper_client/includes/result_template_iscape.html"
-    recomennded_result_include = "iscraper_client/includes/recommended_result_template_iscape.html"
+    recommended_result_include = "iscraper_client/includes/recommended_result_template_iscape.html"
     engine_name = 'iscape_search'
     recommended_results = {}
     form_class = smart_forms.SearchForm
@@ -85,6 +95,7 @@ class IscapeSearchView(SearchView):
                 return redirect(redirect_url)
         return self.render_to_response(self.get_context_data(form=form))
 
+    @method_decorator(check_recaptcha)
     def get(self, request, *args, **kwargs):
         form_class = self.get_form_class()
         form = form_class(data=request.GET)
@@ -98,7 +109,7 @@ class IscapeSearchView(SearchView):
                        'results': self.results,
                        'recommended_results': self.recommended_results,
                        'result_include': self.result_include,
-                       'recommended_result_include': self.recomennded_result_include,
+                       'recommended_result_include': self.recommended_result_include,
                        'meta': self.meta,  # Kept for backwards compat. Use search_meta when possible
                        'search_meta': self.meta,
                        })
@@ -126,6 +137,10 @@ class MultiSearchView(SearchView):
         self.engine1 = load_engines(config=settings.SMARTSEARCH_AVAILABLE_ENGINES[0])[self.engine_name]
         self.engine2 = load_engines(config=settings.SMARTSEARCH_AVAILABLE_ENGINES[1])[self.engine_name]
 
+    @method_decorator(check_recaptcha)
+    def get(self, request, *args, **kwargs):
+        return super(MultiSearchView, self).get(request, *args, **kwargs)
+
     def form_valid(self, form):
         self.query = form.cleaned_data['q']
         self.page_one = form.cleaned_data['page_one']
@@ -135,14 +150,14 @@ class MultiSearchView(SearchView):
             installation_one_kwargs = {'query': "%s" % (self.query), 'page': self.page_one}
             installation_one_key = "installation_one_results" + ":".join(map(
                 lambda x: "%s" % x, installation_one_kwargs.values()))
-            self.results['installation_one'], self.meta['installation_one'] = self.get_results(
+            self.results['installation_one'], self.meta['installation_one'], _ = self.get_results(
                 key=installation_one_key, kwargs=installation_one_kwargs, engine=self.engine1)
 
             # installtion two results
             installation_two_kwargs = {'query': "%s" % (self.query), 'page': self.page_two}
             installation_two_key = "installation_two_results" + ":".join(map(
                 lambda x: "%s" % x, installation_two_kwargs.values()))
-            self.results['installation_two'], self.meta['installation_two'] = self.get_results(
+            self.results['installation_two'], self.meta['installation_two'], _ = self.get_results(
                 key=installation_two_key, kwargs=installation_two_kwargs, engine=self.engine2
             )
 
@@ -165,7 +180,6 @@ class DualGoogleSearchView(SearchView):
     form_class = smart_forms.SearchForm
     engine_name = 'google'
 
-    # I'll have to test passing in vars with this...
     def form_valid(self, form):
         self.query = form.cleaned_data['q']
         self.page = form.cleaned_data['page']
