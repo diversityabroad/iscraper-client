@@ -1,4 +1,4 @@
-# Create your views here.
+import logging
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django import http
@@ -9,6 +9,8 @@ creating a simple Generic Class-based view system based loosely
 on the 1.3+ syntax.
 """
 
+logger = logging.getLogger(__name__)
+
 
 class FormView(object):
 
@@ -16,7 +18,7 @@ class FormView(object):
     form_class = None
 
     @classmethod
-    def as_view(cls,  **initkwargs):
+    def as_view(cls, **initkwargs):
 
         def view(request, *args, **kwargs):
             self = cls(**initkwargs)
@@ -60,8 +62,8 @@ class FormView(object):
     def http_method_not_allowed(self, request, *args, **kwargs):
         logger.warning('Method Not Allowed (%s): %s', request.method, request.path,
                        extra={
-                        'status_code': 405,
-                        'request': self.request
+                           'status_code': 405,
+                           'request': self.request
                        })
         return http.HttpResponseNotAllowed(self._allowed_methods())
 

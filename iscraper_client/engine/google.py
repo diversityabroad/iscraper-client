@@ -3,7 +3,7 @@ import math
 try:
     import json
 except ImportError:
-    import simplejson as json
+    import simplejson as json  # noqa
 import apiclient
 from django.conf import settings
 from apiclient.discovery import build
@@ -37,7 +37,7 @@ class SearchEngine(SearchEngineBase):
         self.engine_info = filter(lambda x: 'NAME' in x.keys() and x['NAME'] is name, SMARTSEARCH_AVAILABLE_ENGINES)[0]
         self.connection = build('customsearch', 'v1', developerKey=self.engine_info['GOOGLE_SITE_SEARCH_API_KEY'])
 
-    def fetch(self,  **kwargs):
+    def fetch(self, **kwargs):
         """
         Supported kwargs for this method
           - query = the search term to look for
@@ -62,7 +62,7 @@ class SearchEngine(SearchEngineBase):
                 num=self._get_num_results(num),
                 start=start).execute()
             logger.debug("Fetched search results for search term '%s'." % (kwargs.get('query', '')))
-        except apiclient.errors.HttpError, e:
+        except apiclient.errors.HttpError as e:
             logger.exception(e)
             raise
         return response
@@ -72,19 +72,19 @@ class SearchEngine(SearchEngineBase):
         has_next_page = has_previous_page = True
         if response:
             try:
-                meta.update({'total_results':response['queries']['request'][0]['totalResults']})
+                meta.update({'total_results': response['queries']['request'][0]['totalResults']})
             except:
                 logger.debug("Unable to parse queries.request.total_results from response.")
                 pass
 
             try:
-                meta.update({'next_page_start':response['queries']['nextPage'][0]['startIndex']})
+                meta.update({'next_page_start': response['queries']['nextPage'][0]['startIndex']})
             except:
                 logger.debug("Unable to parse queries.nextPage.startIndex from response.")
                 has_next_page = False
 
             try:
-                meta.update({'previous_page_start':response['queries']['previousPage'][0]['startIndex']})
+                meta.update({'previous_page_start': response['queries']['previousPage'][0]['startIndex']})
             except:
                 logger.debug("Unable to parse queries.previousPage.startIndex from response.")
                 has_previous_page = False
@@ -92,17 +92,17 @@ class SearchEngine(SearchEngineBase):
             try:
                 start_index = response['queries']['request'][0]['startIndex']
                 count = response['queries']['request'][0]['count']
-                meta.update({'start_index':start_index})
-                meta.update({'end_index':start_index - 1 + count})
+                meta.update({'start_index': start_index})
+                meta.update({'end_index': start_index - 1 + count})
 
                 page = int(math.ceil(start_index / float(self.max_results_per_page)))
-                meta.update({'page':page})
+                meta.update({'page': page})
                 if page > 1 and has_previous_page:
-                   meta.update({'previous_page':page - 1})
+                    meta.update({'previous_page': page - 1})
                 if page < self.max_pages and has_next_page:
-                    meta.update({'next_page':page + 1})
+                    meta.update({'next_page': page + 1})
 
-                meta.update({'count':count})
+                meta.update({'count': count})
             except Exception as e:
                 logger.exception(e)
                 pass
