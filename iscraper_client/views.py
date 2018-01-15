@@ -22,9 +22,9 @@ class SearchView(FormView):
         if 'result_include' in kwargs:
             self.result_include = kwargs.pop('result_include')
         self.query = ""
-        self.results = []
+        self.results = {}
         self.meta = {}
-        self.recommended_results = []
+        self.recommended_results = {}
         self.engine = load_engines()[self.engine_name]
         super(SearchView, self).__init__(*args, **kwargs)
 
@@ -71,6 +71,11 @@ class IscapeSearchView(SearchView):
     engine_name = 'iscape_search'
     form_class = smart_forms.SearchForm
 
+    def __init__(self, *args, **kwargs):
+        super(IscapeSearchView, self).__init__(*args, **kwargs)
+        self.results = []
+        self.recommended_results = []
+    
     def form_valid(self, form):
         self.query = form.cleaned_data['q']
         self.page = form.cleaned_data['page']
