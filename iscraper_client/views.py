@@ -25,6 +25,7 @@ class SearchView(FormView):
             self.result_include = kwargs.pop('result_include')
         self.results = {}
         self.meta = {}
+        self.recommended_results = {}
         self.engine = load_engines()[self.engine_name]
         super(SearchView, self).__init__(*args, **kwargs)
 
@@ -127,12 +128,7 @@ class MultiSearchView(SearchView):
         """
         Load the appropriate search engine and set defaults.
         """
-        if 'template_name' in kwargs:
-            self.template_name = kwargs.pop('template_name')
-        if 'result_include' in kwargs:
-            self.result_include = kwargs.pop('result_include')
-        self.results = {}
-        self.meta = {}
+        super(MultiSearchView, self).__init__(*args, **kwargs)
         self.engine1 = load_engines(config=settings.SMARTSEARCH_AVAILABLE_ENGINES[0])[self.engine_name]
         self.engine2 = load_engines(config=settings.SMARTSEARCH_AVAILABLE_ENGINES[1])[self.engine_name]
 
@@ -149,14 +145,14 @@ class MultiSearchView(SearchView):
             installation_one_kwargs = {'query': "%s" % (self.query), 'page': self.page_one}
             installation_one_key = "installation_one_results" + ":".join(map(
                 lambda x: "%s" % x, installation_one_kwargs.values()))
-            self.results['installation_one'], self.meta['installation_one'] = self.get_results(
+            self.results['installation_one'], self.meta['installation_one'], self.recommended_results['installation_one'] = self.get_results(
                 key=installation_one_key, kwargs=installation_one_kwargs, engine=self.engine1)
 
             # installtion two results
             installation_two_kwargs = {'query': "%s" % (self.query), 'page': self.page_two}
             installation_two_key = "installation_two_results" + ":".join(map(
                 lambda x: "%s" % x, installation_two_kwargs.values()))
-            self.results['installation_two'], self.meta['installation_two'] = self.get_results(
+            self.results['installation_two'], self.meta['installation_two'], self.recommended_results['installation_two'] = self.get_results(
                 key=installation_two_key, kwargs=installation_two_kwargs, engine=self.engine2
             )
 
@@ -190,11 +186,11 @@ class DualGoogleSearchView(SearchView):
             link_site = getattr(settings, 'SMARTSEARCH_LOCAL_SITE', None)
             local_kwargs = {'query': "site:%s %s" % (link_site, self.query), 'page': self.page_local}
             results_key = "results" + ":".join(map(lambda x: "%s" % x, local_kwargs.values()))
-            self.results['local'], self.meta['local'] = self.get_results(results_key, local_kwargs)
+            self.results['local'], self.meta['local'], self.recommended_results['local'] = self.get_results(results_key, local_kwargs)
 
             global_kwargs = {'query': self.query, 'page': self.page}
             results_global_key = "results_global" + ":".join(map(lambda x: "%s" % x, global_kwargs.values()))
-            self.results['global'], self.meta['global'] = self.get_results(results_global_key, global_kwargs)
+            self.results['global'], self.meta['global'], self.recommended_results['global'] = self.get_results(results_global_key, global_kwargs)
 
         return super(DualGoogleSearchView, self).form_valid(form)
 
