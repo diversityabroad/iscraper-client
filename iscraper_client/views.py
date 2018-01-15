@@ -185,7 +185,6 @@ class DualGoogleSearchView(SearchView):
     form_class = smart_forms.SearchForm
     engine_name = 'google'
 
-    # I'll have to test passing in vars with this...
     def form_valid(self, form):
         self.query = form.cleaned_data['q']
         self.page = form.cleaned_data['page']

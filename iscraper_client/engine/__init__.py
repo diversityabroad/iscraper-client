@@ -52,7 +52,7 @@ class SearchEngineBase(object):
                 'page_previous': None, 'page_next': None, }
         return meta
 
-    def fetch(self,  *args, **kwargs):
+    def fetch(self, *args, **kwargs):
         """
         Issues the command to actually make the network request to fetch the
         response. This returns a raw search result response from the search engine.

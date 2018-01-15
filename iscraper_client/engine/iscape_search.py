@@ -81,12 +81,17 @@ class IscapeSearchEngine(SearchEngineBase):
             'query': kwargs.pop('query', ''),
             'installation_id': self.engine_info['INSTALLATION_ID'],
             'page_start': start_index,
-            'page_end': end_index,
+            'page_end': end_index
         }
 
+        if getattr(settings, 'USE_V2_API', False):
+            query_endpoint = self.engine_info['QUERY_ENDPOINT'].format(
+                data.get('installation_id', ''))
+        else:
+            query_endpoint = self.engine_info['QUERY_ENDPOINT']
         req = requests.Request(
             'POST',
-            self.engine_info['QUERY_ENDPOINT'],
+            query_endpoint,
             headers=headers,
             data=data)
         prepared_request = req.prepare()
