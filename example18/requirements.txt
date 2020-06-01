@@ -1,4 +1,4 @@
 # Install using setup.py
-requests==2.18.1
+requests==2.20.0
 django==1.8.18
 -e ../
