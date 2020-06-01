@@ -1,5 +1,5 @@
 import logging
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 from django import http
 
@@ -69,11 +69,13 @@ class FormView(object):
 
     def render_to_response(self, context):
         try:
+            # context_instance was is deprecated in 1.8 and removed in 1.10
+            # render_to_response was deprecated in Django 2.
+            from django.shortcuts import render_to_response
             result = render_to_response(
                 self.template_name, context,
-                context_instance=RequestContext(self.request))
+                context_instance=RequestContext(self.request)
+            )
         except TypeError:
-            # context_instance was is deprecated in 1.8 and removed in 1.10
-            from django.shortcuts import render
             result = render(self.request, self.template_name, context)
         return result
